@@ -6,7 +6,7 @@
       欢迎使用云开发！本页将带你了解如何使用云开发提供的能力快速开发小程序。
     </view>
     <view class="ability_container">
-      <view class="ability_title">你将学习到白萝卜好吃胡萝卜也好吃🥕</view>
+      <view class="ability_title">我爱国足😈</view>
       <view class="ability_item" wx:for="{{ knowledgePoints }}" wx:for-item="point" wx:key="id">
         {{ point.title }}
       </view>
