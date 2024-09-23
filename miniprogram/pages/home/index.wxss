@@ -1,1 +1,29 @@
 /* pages/home/index.wxss */
+
+/* .inner_title{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 10vh;
+} */
+/* .tab_container{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 30vh;
+  width: 100%;
+} */
+
+.focus-button-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 30vh;
+}
+
+.focus-button {
+  padding: 20rpx 40rpx;
+  border: 2rpx solid #000;
+  border-radius: 10rpx;
+  background-color: #fff;
+}

@@ -1,0 +1,5 @@
+<!-- index.wxml -->
+<view class="container">
+  <view class="timer">{{minutes}}:{{seconds}}</view>
+  <button class="stop-btn" bindtap="stopTimer">停止</button>
+</view>
