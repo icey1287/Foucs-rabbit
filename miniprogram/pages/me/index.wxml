@@ -1,3 +1,39 @@
-<!--pages/me/index.wxml-->
-<text>pages/me/index.wxml</text>
-<text>nishizh1123111u</text>
+<view class="container">
+  <!-- 未登录时 -->
+  <view wx:if="{{!isLoggedIn}}" class="avatar-section">
+    <image class="avatar" src="/images/avatar_placeholder.png" mode="aspectFill"></image>
+    <button open-type="getUserInfo" bindgetuserinfo="onLogin" class="login-btn">登录</button>
+  </view>
+
+  <!-- 已登录时 -->
+  <view wx:if="{{isLoggedIn}}" class="user-info-section">
+    <!-- 头像 -->
+    <image class="avatar" src="{{userInfo.avatarUrl}}" mode="aspectFill"></image>
+    <!-- 昵称 -->
+    <view class="info-item">
+      <text class="label">昵称:</text>
+      <text class="value">{{userInfo.nickName}}</text>
+    </view>
+
+    <!-- 累计专注时长 -->
+    <view class="info-item">
+      <text class="label">累计专注时长:</text>
+      <text class="value">{{focusTime}} 小时</text>
+    </view>
+
+    <!-- 小组 -->
+    <view class="info-item">
+      <text class="label">小组:</text>
+      <text class="value">{{group}}</text>
+    </view>
+
+    <!-- 创建账号日期 -->
+    <view class="info-item">
+      <text class="label">创建账号日期:</text>
+      <text class="value">{{creationDate}}</text>
+    </view>
+
+    <!-- 退出 -->
+    <button class="logout-btn" bindtap="onLogout">退出</button>
+  </view>
+</view>

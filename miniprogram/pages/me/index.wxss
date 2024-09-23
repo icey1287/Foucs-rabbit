@@ -1,1 +1,49 @@
-/* pages/me/index.wxss */
+.container {
+  padding: 20px;
+}
+
+.avatar-section, .user-info-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.avatar {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background-color: #f0f0f0;
+  margin-bottom: 10px;
+}
+
+.login-btn {
+  background-color: #1AAD19;
+  color: white;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.info-item {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid #ddd;
+}
+
+.label {
+  font-weight: bold;
+  color: #333;
+}
+
+.value {
+  color: #666;
+}
+
+.logout-btn {
+  background-color: #E64340;
+  color: white;
+  padding: 10px;
+  margin-top: 20px;
+  border-radius: 5px;
+}
