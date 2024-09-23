@@ -1,4 +1,18 @@
 <!--pages/home/index.wxml-->
-<text>选择专注时间</text>
-<Tab tabList="{{ tabList }}" bindgettab="getTab"  />
-<button>开始专注</button>
+<image style="width:100%;background-color: #000000;" mode="scaleToFill" src="../../images/focusing_from_xiaomi.png"></image>
+
+
+
+<!-- <text class="inner_title">选择专注时间</text> -->
+
+<view class="tab_container">
+  <Tab tabList="{{ tabList }}" bindgettab="getTab"  />
+</view>
+
+<!-- <navigator url="../focusing/index?focus_target_time=10"> -->
+<view class="focus-button-container">
+  <button bind:tap="startFocus" class="focus-button" style="font-size: {{40}}rpx;">开始专注</button>
+</view>
+<!-- </navigator> -->
+
+<button bind:tap="CloudFunctionTest" >CloudFunctionTest</button>

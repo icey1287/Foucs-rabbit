@@ -1,66 +1,56 @@
-// pages/focusing/index.js
 Page({
-
-  /**
-   * 页面的初始数据
-   */
   data: {
-      focus_target_time:0,//min
+    focus_target_time: 0, // 初始倒计时时间（分钟）
+    minutes: '00',
+    seconds: '00',
+    timer: null
   },
 
-  /**
-   * 生命周期函数--监听页面加载
-   */
-  onLoad(options) {
-
+  onLoad: function(options) {
+    const eventChannel = this.getOpenerEventChannel();
+     // 监听 index页面定义的 toB 事件
+     eventChannel.on('args', (res) => {
+       console.log("Focusing:OnLoad:Args:",res.focus_target_time) 
+       this.data.focus_target_time=res.focus_target_time;
+       console.log(this.data)
+       this.startTimer();
+     })
   },
 
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady() {
+  startTimer: function() {
+    let totalSeconds = this.data.focus_target_time * 60;
+    
+    this.data.timer = setInterval(() => {
+      if (totalSeconds <= 0) {
+        this.stopTimer();
+        wx.showModal({
+          title: '提示',
+          content: '倒计时结束！',
+          showCancel: false
+        });
+        return;
+      }
 
+      totalSeconds--;
+      this.setData({
+        minutes: Math.floor(totalSeconds / 60).toString().padStart(2, '0'),
+        seconds: (totalSeconds % 60).toString().padStart(2, '0')
+      });
+    }, 1000);
   },
 
-  /**
-   * 生命周期函数--监听页面显示
-   */
-  onShow() {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面隐藏
-   */
-  onHide() {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面卸载
-   */
-  onUnload() {
-
-  },
-
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
-  onPullDownRefresh() {
-
-  },
-
-  /**
-   * 页面上拉触底事件的处理函数
-   */
-  onReachBottom() {
-
-  },
-
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage() {
-
+  stopTimer: function() {
+    clearInterval(this.data.timer);
+    wx.showModal({
+      title: '提示',
+      content: '确定要停止倒计时吗？',
+      success: (res) => {
+        if (res.confirm) {
+          wx.navigateBack();
+        } else {
+          this.startTimer();
+        }
+      }
+    });
   }
-})
+});
