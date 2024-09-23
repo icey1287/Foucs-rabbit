@@ -5,6 +5,7 @@ Page({
    */
   data: {
       login: false,  // 是否登录
+      openId: '',
       avatarUrl: '', // 头像
       nickName: '',  // 昵称
       focusTime: 0,  // 累计专注时长
@@ -39,8 +40,24 @@ Page({
                 nickName
             });
 
-            // 加载用户其他信息（从云数据库获取）
-            this.loadUserData();
+            // 获取 openId 并存储到 data
+            console.log("CCCCC")
+            wx.cloud.callFunction({
+              name: 'login', // 云函数名称
+              success: res => {
+                  const openId = res.result.openid;
+                  wx.setStorageSync('openId', openId);  // 保存 openId 到本地
+                  this.setData({
+                      openId
+                  });
+                  console.log("CCCCC",res)
+                  // 加载用户其他信息
+                  this.loadUserData();
+              },
+              fail: err => {
+                  console.error('获取 openId 失败：', err);
+              }
+          });
         }
       });
   },
@@ -99,7 +116,7 @@ Page({
   onLoad(options) {
       const login = wx.getStorageSync('login');
       const userInfo = wx.getStorageSync('userInfo');
-
+      const openId = wx.getStorageSync('openId');
       if (userInfo) {
           const { avatarUrl, nickName } = userInfo;
           this.setData({
@@ -110,13 +127,16 @@ Page({
 
       // 检查登录状态
       this.setData({
-          login: !!login
-      });
+        login: !!login,
+        openId: openId || ''
+    });
 
-      // 如果已登录，加载用户数据
-      if (login) {
-          this.loadUserData();
-      }
+    // 如果已登录并且有 openId，加载用户数据
+    if (login && openId) {
+        this.loadUserData();
+    }
+    console.log("AAAAAAAAAA")
+    console.log(this.data.openId)
   },
 
   /**
