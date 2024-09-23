@@ -1,39 +1,33 @@
-<view class="container">
-  <!-- 未登录时 -->
-  <view wx:if="{{!isLoggedIn}}" class="avatar-section">
-    <image class="avatar" src="/images/avatar_placeholder.png" mode="aspectFill"></image>
-    <button open-type="getUserInfo" bindgetuserinfo="onLogin" class="login-btn">登录</button>
-  </view>
-
-  <!-- 已登录时 -->
-  <view wx:if="{{isLoggedIn}}" class="user-info-section">
-    <!-- 头像 -->
-    <image class="avatar" src="{{userInfo.avatarUrl}}" mode="aspectFill"></image>
-    <!-- 昵称 -->
-    <view class="info-item">
-      <text class="label">昵称:</text>
-      <text class="value">{{userInfo.nickName}}</text>
+<view class="body">
+    <view class="unlogin-body" wx:if="{{ !login }}">
+        <view class="unlogin">
+            <image class="unlogin-image" src="/images/avatar.png"></image>
+            <button class="unlogin-btn" open-type="getUserInfo" bindtap="toLogin">点我一键登录</button>
+        </view>
     </view>
-
-    <!-- 累计专注时长 -->
-    <view class="info-item">
-      <text class="label">累计专注时长:</text>
-      <text class="value">{{focusTime}} 小时</text>
+    <view class="login" wx:else>
+        <view class="info">
+            <image class="avatarUrl" src="{{ avatarUrl }}"></image>
+            <text class="nickName">{{ nickName }}</text>
+        </view>
+        <view class="cell-body">
+            <view class="cell-list">
+                <view 
+                    class="cell" 
+                    wx:for="{{ cellList }}" 
+                    wx:key="index"
+                    data-page="{{ item.page }}"
+                    bindtap="toDetail"
+                >
+                    <view class="cell-left">
+                        <image class="cell-left-image" src="{{ item.url }}"></image>
+                        <text class="cell-left-text">{{ item.text }}</text>
+                    </view>
+                    <view class="cell-right">
+                        <image class="cell-right-image" src="../../images/dayu.png"></image>
+                    </view>
+                </view>
+            </view>
+        </view>
     </view>
-
-    <!-- 小组 -->
-    <view class="info-item">
-      <text class="label">小组:</text>
-      <text class="value">{{group}}</text>
-    </view>
-
-    <!-- 创建账号日期 -->
-    <view class="info-item">
-      <text class="label">创建账号日期:</text>
-      <text class="value">{{creationDate}}</text>
-    </view>
-
-    <!-- 退出 -->
-    <button class="logout-btn" bindtap="onLogout">退出</button>
-  </view>
 </view>

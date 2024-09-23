@@ -1,74 +1,132 @@
-const app = getApp();
-const db = wx.cloud.database();
-
 Page({
+
+  /**
+   * 页面的初始数据
+   */
   data: {
-    isLoggedIn: false,
-    userInfo: {},
-    focusTime: 0,      // 累计专注时长
-    group: '',         // 小组
-    creationDate: '',  // 创建账号日期
+      login: false,  // 是否登录
+      avatarUrl: '', // 头像
+      nickName: '',  // 昵称
+      focusTime: 0,  // 累计专注时长
+      group: '',     // 小组
+      creationDate: '', // 创建账号日期
+      cellList: [
+          {
+              url: '../../images/quit.png',
+              text: '退出登录'
+          }
+      ]
   },
 
-  onLoad() {
-    // 检查是否已经登录
-    if (app.globalData.userInfo) {
-      this.setData({
-        isLoggedIn: true,
-        userInfo: app.globalData.userInfo,
+  // 登录函数
+  toLogin() {
+      wx.getUserProfile({
+        desc: '获取用户信息',
+        success: (res) => {
+            console.log(res);
+            const { userInfo: { avatarUrl, nickName } } = res;
+            const userInfo = {
+                avatarUrl,
+                nickName
+            }
+            wx.setStorageSync('userInfo', userInfo);  // 将用户信息存储
+            wx.setStorageSync('login', true);  // 设置登录状态
+
+            // 更新数据
+            this.setData({
+                login: true,
+                avatarUrl,
+                nickName
+            });
+
+            // 加载用户其他信息（从云数据库获取）
+            this.loadUserData();
+        }
       });
-      this.loadUserData(); // 加载用户的专注时长等信息
-    }
   },
 
-  // 登录逻辑
-  onLogin(e) {
-    if (e.detail.userInfo) {
-      // 保存用户信息
-      app.globalData.userInfo = e.detail.userInfo;
-      this.setData({
-        isLoggedIn: true,
-        userInfo: e.detail.userInfo,
-      });
-
-      // 获取用户数据
-      this.loadUserData();
-
-      console.log('用户登录成功：', e.detail.userInfo);
-    } else {
-      console.log('用户拒绝登录');
-    }
-  },
-
-  // 从云数据库加载用户数据
-  loadUserData() {
-    const openId = app.globalData.openId; // 通过小程序获取用户的 openId
-
-    // 从云数据库中获取用户的专注时长、小组、创建账号日期等信息
-    db.collection('users').where({ _openid: openId }).get().then(res => {
-      if (res.data.length > 0) {
-        const userData = res.data[0];
-        this.setData({
-          focusTime: userData.focusTime || 0,
-          group: userData.group || '未分组',
-          creationDate: userData.creationDate || '未知',
-        });
+  // 退出登录函数
+  toDetail(e) {
+      const { page } = e.currentTarget.dataset;
+      if (!page) {
+          wx.showModal({
+            title: '提示',
+            content: '确定退出吗?',
+            success: (res) => {
+                const { confirm } = res;
+                if (confirm) {
+                    wx.removeStorageSync('login');
+                    wx.removeStorageSync('userInfo');
+                    this.setData({
+                        login: false,
+                        avatarUrl: '',
+                        nickName: '',
+                        focusTime: 0,
+                        group: '',
+                        creationDate: ''
+                    });
+                }
+            }
+          });
       }
-    }).catch(err => {
-      console.error('获取用户数据失败：', err);
-    });
   },
 
-  // 退出逻辑
-  onLogout() {
-    app.globalData.userInfo = null;
-    this.setData({
-      isLoggedIn: false,
-      userInfo: {},
-      focusTime: 0,
-      group: '',
-      creationDate: '',
-    });
-    console.log('用户已退出');
+  // 从云数据库加载用户信息（专注时长、小组、创建账号日期）
+  loadUserData() {
+      const openId = wx.getStorageSync('openId');  // 获取用户 openId，可能在 app.js 中获取并存储
+
+      const db = wx.cloud.database();  // 获取云数据库实例
+
+      db.collection('users').where({
+          _openid: openId
+      }).get().then(res => {
+          if (res.data.length > 0) {
+              const userData = res.data[0];
+              this.setData({
+                  focusTime: userData.focusTime || 0,
+                  group: userData.group || '未分组',
+                  creationDate: userData.creationDate || '未知',
+              });
+          }
+      }).catch(err => {
+          console.error('获取用户数据失败：', err);
+      });
+  },
+
+  /**
+   * 生命周期函数--监听页面加载
+   */
+  onLoad(options) {
+      const login = wx.getStorageSync('login');
+      const userInfo = wx.getStorageSync('userInfo');
+
+      if (userInfo) {
+          const { avatarUrl, nickName } = userInfo;
+          this.setData({
+              avatarUrl,
+              nickName
+          });
+      }
+
+      // 检查登录状态
+      this.setData({
+          login: !!login
+      });
+
+      // 如果已登录，加载用户数据
+      if (login) {
+          this.loadUserData();
+      }
+  },
+
+  /**
+   * 生命周期函数--监听页面显示
+   */
+  onShow() {
+      if (typeof this.getTabBar === 'function' && this.getTabBar()) {
+          this.getTabBar().setData({
+              select: 4
+          });
+      }
   }
 });
