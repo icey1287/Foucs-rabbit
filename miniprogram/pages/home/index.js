@@ -5,8 +5,9 @@ Page({
    * 页面的初始数据
    */
   data: {
-    tabList: ['10min', '25min','40min','60min','自定义'],
-    tabList_raw: ['10', '25','40','60','0'],
+    tabList: ['5s', '25min','40min','60min','自定义'],
+    tabList_min: ['0', '25','40','60','0'],
+    tabList_sec:['5','0','0','0','0'],
     select: 0,
   },
   getTab(e) {
@@ -20,9 +21,9 @@ Page({
   },
   startFocus(focus_target_time){
   wx.navigateTo({
-      url: '../focusing/index'+"?focus_target_time="+this.data.tabList_raw[this.data.select],
+      url: '../focusing/index'+"?min="+this.data.tabList_min[this.data.select]+"&sec="+this.data.tabList_sec[this.data.select],
       // success:(res)=>{
-			// 	res.eventChannel.emit('args',{focus_target_time:this.data.tabList_raw[this.data.select]})
+			// 	res.eventChannel.emit('args',{focus_target_time:this.data.tabList_min[this.data.select]})
 			// }
     })
   },
