@@ -5,9 +5,18 @@ Page({
    * 页面的初始数据
    */
   data: {
-
+    tabList: ['10min', '25min','40min','60min','自定义'],
+    select: 0,
   },
-
+  getTab(e) {
+    const select = e.detail;
+    console.log("已选中",select)
+    this.setData({
+        select
+    })
+    console.log("已更新",this.data.select)
+    this.onLoad();
+  },
   /**
    * 生命周期函数--监听页面加载
    */

@@ -1,2 +1,4 @@
 <!--pages/home/index.wxml-->
-<text>你好</text>
+<text>选择专注时间</text>
+<Tab tabList="{{ tabList }}" bindgettab="getTab"  />
+<button>开始专注</button>
