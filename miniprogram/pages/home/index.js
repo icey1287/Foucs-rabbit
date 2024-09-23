@@ -20,10 +20,10 @@ Page({
   },
   startFocus(focus_target_time){
   wx.navigateTo({
-      url: '../focusing/index',
-      success:(res)=>{
-				res.eventChannel.emit('args',{focus_target_time:this.data.tabList_raw[this.data.select]})
-			}
+      url: '../focusing/index'+"?focus_target_time="+this.data.tabList_raw[this.data.select],
+      // success:(res)=>{
+			// 	res.eventChannel.emit('args',{focus_target_time:this.data.tabList_raw[this.data.select]})
+			// }
     })
   },
 CloudFunctionTest(){

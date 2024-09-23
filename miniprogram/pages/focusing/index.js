@@ -7,14 +7,17 @@ Page({
   },
 
   onLoad: function(options) {
-    const eventChannel = this.getOpenerEventChannel();
-     // 监听 index页面定义的 toB 事件
-     eventChannel.on('args', (res) => {
-       console.log("Focusing:OnLoad:Args:",res.focus_target_time) 
-       this.data.focus_target_time=res.focus_target_time;
-       console.log(this.data)
-       this.startTimer();
-     })
+    this.data.focus_target_time=options["focus_target_time"]
+    this.data.minutes=this.data.focus_target_time
+    this.startTimer();
+    // const eventChannel = this.getOpenerEventChannel();
+    // console.log(options)
+    //  eventChannel.on('args', (res) => {
+    //    console.log("Focusing:OnLoad:Args:",res.focus_target_time) 
+    //    this.data.focus_target_time=res.focus_target_time;
+    //    console.log(this.data)
+    //    this.startTimer();
+    //  })
   },
 
   startTimer: function() {
@@ -22,7 +25,7 @@ Page({
     
     this.data.timer = setInterval(() => {
       if (totalSeconds <= 0) {
-        this.stopTimer();
+        clearInterval(this.data.timer);
         wx.showModal({
           title: '提示',
           content: '倒计时结束！',
@@ -39,13 +42,13 @@ Page({
     }, 1000);
   },
 
-  stopTimer: function() {
-    clearInterval(this.data.timer);
+  stopTimerButton: function() {
     wx.showModal({
       title: '提示',
       content: '确定要停止倒计时吗？',
       success: (res) => {
         if (res.confirm) {
+          clearInterval(this.data.timer);
           wx.navigateBack();
         } else {
           this.startTimer();
