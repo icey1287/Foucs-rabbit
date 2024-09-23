@@ -43,12 +43,12 @@ Page({
             // 获取 openId 并存储到 data
             console.log("CCCCC")
             wx.cloud.callFunction({
-              name: 'login', // 云函数名称
+              name: 'getopenid', // 云函数名称
               success: res => {
                   const openId = res.result.openid;
                   wx.setStorageSync('openId', openId);  // 保存 openId 到本地
                   this.setData({
-                      openId
+                      openId:res.result.userInfo.openId
                   });
                   console.log("CCCCC",res)
                   // 加载用户其他信息

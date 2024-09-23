@@ -1,7 +1,7 @@
 // 云函数入口文件
 const cloud = require('wx-server-sdk')
 
-cloud.init({ env: 'chen-8gcb1i8089d76152' }) // 使用当前云环境
+cloud.init({ env: 'jgzt-6guvlk751444cb8d' }) // 使用当前云环境
 
 // 云函数入口函数
 exports.main = async (event, context) => {
