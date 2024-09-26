@@ -9,7 +9,7 @@ Page({
 
   onLoad: function (options) {
     this.data.init_min = this.data.left_min = options["min"]
-    console.log("this.data.init_min:",this.data.init_min,"this.data.left_min:",this.data.left_min)
+    console.log("this.data.init_min:", this.data.init_min, "this.data.left_min:", this.data.left_min)
     this.data.init_sec = this.data.left_sec = options["sec"]
     // this.data.minutes = this.data.init_min
     this.startTimer();
@@ -30,9 +30,11 @@ Page({
         clearInterval(this.data.timer);
         wx.showModal({
           title: '提示',
-          content: '倒计时结束！',
+          content: '倒计时结束！获得宠物?',//TODO
           showCancel: false,
           success: (res) => {
+            //更新数据库
+            this.upsertFocus(this.data.init_min);
             this.goBack();
           }
         });
@@ -46,6 +48,19 @@ Page({
     }, 1000);
   },
 
+  upsertFocus: function (addtime) {
+    const dbname = 'focus';
+    const db = wx.cloud.database();
+    const _ = db.command
+    db.collection(dbname).add({
+      data:
+      {
+        focusTime: addtime,
+        date: (new Date()).toDateString()
+      }
+
+    })
+  },
   stopTimerButton: function () {
     wx.showModal({
       title: '提示',
@@ -70,15 +85,15 @@ Page({
   onHide() {
     console.log("HIDE")
   },
-  onShow(){
-      wx.hideHomeButton({
-        success:function(){
-          console.log("focusing:","hide homebutton success")
-        },
-        fail:function(){
-          console.log("focusing:","hide homebutton success")
-        }
-      });
+  onShow() {
+    wx.hideHomeButton({
+      success: function () {
+        console.log("focusing:", "hide homebutton success")
+      },
+      fail: function () {
+        console.log("focusing:", "hide homebutton success")
+      }
+    });
   }
 }
 );
