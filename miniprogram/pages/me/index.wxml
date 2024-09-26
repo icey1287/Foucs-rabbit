@@ -1,33 +1,52 @@
 <view class="body">
+    <!-- 未登录时 -->
     <view class="unlogin-body" wx:if="{{ !login }}">
         <view class="unlogin">
             <image class="unlogin-image" src="/images/avatar.png"></image>
             <button class="unlogin-btn" open-type="getUserInfo" bindtap="toLogin">点我一键登录</button>
         </view>
     </view>
+
+    <!-- 已登录时 -->
     <view class="login" wx:else>
         <view class="info">
             <image class="avatarUrl" src="{{ avatarUrl }}"></image>
             <text class="nickName">{{ nickName }}</text>
         </view>
-        <view class="cell-body">
-            <view class="cell-list">
-                <view 
-                    class="cell" 
-                    wx:for="{{ cellList }}" 
-                    wx:key="index"
-                    data-page="{{ item.page }}"
-                    bindtap="toDetail"
-                >
-                    <view class="cell-left">
-                        <image class="cell-left-image" src="{{ item.url }}"></image>
-                        <text class="cell-left-text">{{ item.text }}</text>
-                    </view>
-                    <view class="cell-right">
-                        <image class="cell-right-image" src="../../images/dayu.png"></image>
-                    </view>
-                </view>
+
+        <!-- 累计专注时长 -->
+        <view class="cell">
+            <view class="cell-left">
+                <text class="cell-left-text">累计专注时长</text>
             </view>
+            <view class="cell-right">
+                <text class="cell-right-text">{{ focusTime ? focusTime + ' 小时' : '暂无数据' }}</text>
+            </view>
+        </view>
+
+        <!-- 小组 -->
+        <view class="cell">
+            <view class="cell-left">
+                <text class="cell-left-text">小组</text>
+            </view>
+            <view class="cell-right">
+                <text class="cell-right-text">{{ group || '暂无小组' }}</text>
+            </view>
+        </view>
+
+        <!-- 创建账号日期 -->
+        <view class="cell">
+            <view class="cell-left">
+                <text class="cell-left-text">创建账号日期</text>
+            </view>
+            <view class="cell-right">
+                <text class="cell-right-text">{{ creationDate || '暂无日期' }}</text>
+            </view>
+        </view>
+
+        <!-- 退出登录 -->
+        <view class="cell">
+            <button class="logout-btn" bindtap="toDetail">退出登录</button>
         </view>
     </view>
 </view>
