@@ -53,6 +53,8 @@ Page({
                   console.log("CCCCC",res)
                   // 加载用户其他信息
                   this.loadUserData();
+                  //把openid传到全局变量
+                  getApp().globalData.openId = openId;
               },
               fail: err => {
                   console.error('获取 openId 失败：', err);
@@ -90,7 +92,7 @@ Page({
 
   // 从云数据库加载用户信息（专注时长、小组、创建账号日期）
   loadUserData() {
-      const openId = wx.getStorageSync('openId');  // 获取用户 openId，可能在 app.js 中获取并存储
+      const openId = wx.getStorageSync('openId');  // 
 
       const db = wx.cloud.database();  // 获取云数据库实例
 
