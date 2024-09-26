@@ -45,7 +45,7 @@ Page({
             wx.cloud.callFunction({
               name: 'getopenid', // 云函数名称
               success: res => {
-                  const openId = res.result.openid;
+                  const openId = res.result.userInfo.openId;
                   wx.setStorageSync('openId', openId);  // 保存 openId 到本地
                   this.setData({
                       openId:res.result.userInfo.openId
@@ -76,6 +76,7 @@ Page({
                 if (confirm) {
                     wx.removeStorageSync('login');
                     wx.removeStorageSync('userInfo');
+                    getApp().globalData.openId = null;
                     this.setData({
                         login: false,
                         avatarUrl: '',
