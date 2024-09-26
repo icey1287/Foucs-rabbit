@@ -5,6 +5,7 @@ Page({
    */
   data: {
       login: false,  // 是否登录
+      openId: '',
       avatarUrl: '', // 头像
       nickName: '',  // 昵称
       focusTime: 0,  // 累计专注时长
@@ -39,8 +40,26 @@ Page({
                 nickName
             });
 
-            // 加载用户其他信息（从云数据库获取）
-            this.loadUserData();
+            // 获取 openId 并存储到 data
+            console.log("CCCCC")
+            wx.cloud.callFunction({
+              name: 'getopenid', // 云函数名称
+              success: res => {
+                  const openId = res.result.openid;
+                  wx.setStorageSync('openId', openId);  // 保存 openId 到本地
+                  this.setData({
+                      openId:res.result.userInfo.openId
+                  });
+                  console.log("CCCCC",res)
+                  // 加载用户其他信息
+                  this.loadUserData();
+                  //把openid传到全局变量
+                  getApp().globalData.openId = openId;
+              },
+              fail: err => {
+                  console.error('获取 openId 失败：', err);
+              }
+          });
         }
       });
   },
@@ -73,24 +92,51 @@ Page({
 
   // 从云数据库加载用户信息（专注时长、小组、创建账号日期）
   loadUserData() {
-      const openId = wx.getStorageSync('openId');  // 获取用户 openId，可能在 app.js 中获取并存储
+      const openId = wx.getStorageSync('openId');  // 
 
-      const db = wx.cloud.database();  // 获取云数据库实例
+      const db = wx.cloud.database();
 
-      db.collection('users').where({
-          _openid: openId
-      }).get().then(res => {
-          if (res.data.length > 0) {
-              const userData = res.data[0];
-              this.setData({
-                  focusTime: userData.focusTime || 0,
-                  group: userData.group || '未分组',
-                  creationDate: userData.creationDate || '未知',
-              });
-          }
-      }).catch(err => {
-          console.error('获取用户数据失败：', err);
-      });
+// 先查询数据库
+        db.collection('users').where({
+            _openid: openId
+        }).get().then(res => {
+            // 如果查询结果中有数据
+            if (res.data.length > 0) {
+                const userData = res.data[0];
+                // 将用户数据设置到页面上
+                this.setData({
+                    focusTime: userData.focusTime || 0,
+                    group: userData.group || '未分组',
+                    creationDate: userData.creationDate || '未知',
+                });
+            } else {
+                // 如果没有对应的用户数据，则创建新用户数据
+                const date = new Date();
+                const creationDate = date.toLocaleDateString(); // 将日期格式化为年月日
+                
+                db.collection('users').add({
+                    data: {
+                        openId: openId,
+                        focusTime: 0,
+                        group: '未分组',
+                        creationDate: creationDate // 保存格式化后的日期
+                    }
+                }).then(res => {
+                    console.log('创建用户数据成功：', res);
+                    // 创建成功后，将初始化的数据设置到页面上
+                    this.setData({
+                        focusTime: 0,
+                        group: '未分组',
+                        creationDate: creationDate // 设置格式化后的日期
+                    });
+                }).catch(err => {
+                    console.error('创建用户数据失败：', err);
+                });
+            }
+        }).catch(err => {
+            console.error('查询用户数据失败：', err);
+        });
+
   },
 
   /**
@@ -99,7 +145,7 @@ Page({
   onLoad(options) {
       const login = wx.getStorageSync('login');
       const userInfo = wx.getStorageSync('userInfo');
-
+      const openId = wx.getStorageSync('openId');
       if (userInfo) {
           const { avatarUrl, nickName } = userInfo;
           this.setData({
@@ -110,13 +156,16 @@ Page({
 
       // 检查登录状态
       this.setData({
-          login: !!login
-      });
+        login: !!login,
+        openId: openId || ''
+    });
 
-      // 如果已登录，加载用户数据
-      if (login) {
-          this.loadUserData();
-      }
+    // 如果已登录并且有 openId，加载用户数据
+    if (login && openId) {
+        this.loadUserData();
+    }
+    console.log("AAAAAAAAAA")
+    console.log(this.data.openId)
   },
 
   /**
