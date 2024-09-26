@@ -8,7 +8,7 @@ Page({
       openId: '',
       avatarUrl: '', // 头像
       nickName: '',  // 昵称
-      focusTime: 0,  // 累计专注时长
+      sumFocusTime: 0,  // 累计专注时长
       group: '',     // 小组
       creationDate: '', // 创建账号日期
       cellList: [
@@ -81,7 +81,7 @@ Page({
                         login: false,
                         avatarUrl: '',
                         nickName: '',
-                        focusTime: 0,
+                        sumFocusTime: 0,
                         group: '',
                         creationDate: ''
                     });
@@ -106,7 +106,7 @@ Page({
                 const userData = res.data[0];
                 // 将用户数据设置到页面上
                 this.setData({
-                    focusTime: userData.focusTime || 0,
+                    sumFocusTime: userData.sumFocusTime || 0,
                     group: userData.group || '未分组',
                     creationDate: userData.creationDate || '未知',
                 });
@@ -118,7 +118,7 @@ Page({
                 db.collection('users').add({
                     data: {
                         openId: openId,
-                        focusTime: 0,
+                        sumFocusTime: 0,
                         group: '未分组',
                         creationDate: creationDate // 保存格式化后的日期
                     }
@@ -126,7 +126,7 @@ Page({
                     console.log('创建用户数据成功：', res);
                     // 创建成功后，将初始化的数据设置到页面上
                     this.setData({
-                        focusTime: 0,
+                        sumFocusTime: 0,
                         group: '未分组',
                         creationDate: creationDate // 设置格式化后的日期
                     });

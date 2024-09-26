@@ -20,7 +20,7 @@
                 <text class="cell-left-text">累计专注时长</text>
             </view>
             <view class="cell-right">
-                <text class="cell-right-text">{{ focusTime ? focusTime + ' 小时' : '暂无数据' }}</text>
+                <text class="cell-right-text">{{ sumFocusTime ? sumFocusTime + ' 分钟' : '0分钟' }}</text>
             </view>
         </view>
 
