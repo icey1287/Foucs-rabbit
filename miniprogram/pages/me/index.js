@@ -76,6 +76,7 @@ Page({
                 if (confirm) {
                     wx.removeStorageSync('login');
                     wx.removeStorageSync('userInfo');
+                    getApp().globalData.openId = null;
                     this.setData({
                         login: false,
                         avatarUrl: '',
