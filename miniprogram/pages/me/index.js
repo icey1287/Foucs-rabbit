@@ -94,22 +94,49 @@ Page({
   loadUserData() {
       const openId = wx.getStorageSync('openId');  // 
 
-      const db = wx.cloud.database();  // 获取云数据库实例
+      const db = wx.cloud.database();
 
-      db.collection('users').where({
-          _openid: openId
-      }).get().then(res => {
-          if (res.data.length > 0) {
-              const userData = res.data[0];
-              this.setData({
-                  focusTime: userData.focusTime || 0,
-                  group: userData.group || '未分组',
-                  creationDate: userData.creationDate || '未知',
-              });
-          }
-      }).catch(err => {
-          console.error('获取用户数据失败：', err);
-      });
+// 先查询数据库
+        db.collection('users').where({
+            _openid: openId
+        }).get().then(res => {
+            // 如果查询结果中有数据
+            if (res.data.length > 0) {
+                const userData = res.data[0];
+                // 将用户数据设置到页面上
+                this.setData({
+                    focusTime: userData.focusTime || 0,
+                    group: userData.group || '未分组',
+                    creationDate: userData.creationDate || '未知',
+                });
+            } else {
+                // 如果没有对应的用户数据，则创建新用户数据
+                const date = new Date();
+                const creationDate = date.toLocaleDateString(); // 将日期格式化为年月日
+                
+                db.collection('users').add({
+                    data: {
+                        openId: openId,
+                        focusTime: 0,
+                        group: '未分组',
+                        creationDate: creationDate // 保存格式化后的日期
+                    }
+                }).then(res => {
+                    console.log('创建用户数据成功：', res);
+                    // 创建成功后，将初始化的数据设置到页面上
+                    this.setData({
+                        focusTime: 0,
+                        group: '未分组',
+                        creationDate: creationDate // 设置格式化后的日期
+                    });
+                }).catch(err => {
+                    console.error('创建用户数据失败：', err);
+                });
+            }
+        }).catch(err => {
+            console.error('查询用户数据失败：', err);
+        });
+
   },
 
   /**
