@@ -1,3 +1,5 @@
+const { CREATE_INSTANCE } = require("XrFrame/kanata/lib/kanata");
+
 Page({
   data: {
     init_min: 0, // 初始倒计时时间（分钟）
@@ -33,9 +35,13 @@ Page({
           content: '倒计时结束！获得宠物?',//TODO
           showCancel: false,
           success: (res) => {
-            //更新数据库 TODO:改成分钟(测试用sec)
-            this.upsertFocus(this.data.init_sec);
-            this.updateUserTotalTime(this.data.init_sec)
+            if (this.data.init_min == 0) {
+              this.upsertFocus(this.data.init_sec);
+              this.updateUserTotalTime(this.data.init_sec)
+            } else {//测试用5sec <=> 5min
+              this.upsertFocus(this.data.init_min);
+              this.updateUserTotalTime(this.data.init_min)
+            }
             this.goBack();
           }
         });
@@ -49,6 +55,7 @@ Page({
     }, 1000);
   },
 
+  //插入focus一条专注记录
   upsertFocus: function (addtime) {
     const dbname = 'focus';
     const db = wx.cloud.database();
@@ -62,16 +69,27 @@ Page({
 
     })
   },
+  //更新users表的sumFocusTime和gold
+  //(更新总专注时长,金币)
   updateUserTotalTime: function (addtime) {
+    addtime = Number(addtime)
     const dbname = 'users';
     const db = wx.cloud.database();
     const _ = db.command
-    db.collection(dbname)
-      .update({
-        data: {
-          sumFocusTime: _.inc(addtime)
-        }
-      })
+    db.collection(dbname).get().then(res => {
+      if (res.data.length === 0) {
+        console.log("focus:err:", "我没在focus表?")
+        return;
+      }
+      const user = res.data[0]
+      db.collection(dbname).doc(user._id)
+        .update({
+          data: {
+            sumFocusTime: _.inc(addtime),
+            gold: _.inc(addtime),
+          }
+        })
+    })
   },
   stopTimerButton: function () {
     wx.showModal({
