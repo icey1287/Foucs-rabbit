@@ -20,16 +20,19 @@ Page({
     this.onLoad();
   },
   startFocus(focus_target_time){
-  wx.navigateTo({
+  // wx.navigateTo({
+  //     url: '../focusing/index'+"?min="+this.data.tabList_min[this.data.select]+"&sec="+this.data.tabList_sec[this.data.select],
+  //     // success:(res)=>{
+	// 		// 	res.eventChannel.emit('args',{focus_target_time:this.data.tabList_min[this.data.select]})
+	// 		// }
+  //   });
+    wx.reLaunch({
       url: '../focusing/index'+"?min="+this.data.tabList_min[this.data.select]+"&sec="+this.data.tabList_sec[this.data.select],
-      // success:(res)=>{
-			// 	res.eventChannel.emit('args',{focus_target_time:this.data.tabList_min[this.data.select]})
-			// }
     })
   },
 CloudFunctionTest(){
     wx.cloud.callFunction({
-      name: 'example',
+      name: 'help',
       data: {
         data:"I am Data"
       },
@@ -45,28 +48,27 @@ CloudFunctionTest(){
    * 生命周期函数--监听页面加载
    */
   onLoad(options) {
-
+      console.log("ONLOAD");
   },
 
   /**
    * 生命周期函数--监听页面初次渲染完成
    */
   onReady() {
-
+      console.log("onReady");
   },
 
   /**
    * 生命周期函数--监听页面显示
    */
   onShow() {
-
+      console.log("onShow");
   },
 
   /**
    * 生命周期函数--监听页面隐藏
    */
   onHide() {
-
   },
 
   /**

@@ -62,7 +62,23 @@ Page({
   },
   goBack: function () {
     clearInterval(this.data.timer);
-    wx.navigateBack();
+    // wx.navigateBack();
+    wx.reLaunch({
+      url: '../home/index',
+    })
+  },
+  onHide() {
+    console.log("HIDE")
+  },
+  onShow(){
+      wx.hideHomeButton({
+        success:function(){
+          console.log("focusing:","hide homebutton success")
+        },
+        fail:function(){
+          console.log("focusing:","hide homebutton success")
+        }
+      });
   }
 }
 );

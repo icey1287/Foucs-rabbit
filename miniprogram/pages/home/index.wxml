@@ -16,3 +16,5 @@
 <!-- </navigator> -->
 
 <button bind:tap="CloudFunctionTest" >CloudFunctionTest</button>
+
+<button class="apple-button">Click me</button>
