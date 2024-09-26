@@ -33,8 +33,9 @@ Page({
           content: '倒计时结束！获得宠物?',//TODO
           showCancel: false,
           success: (res) => {
-            //更新数据库
-            this.upsertFocus(this.data.init_min);
+            //更新数据库 TODO:改成分钟(测试用sec)
+            this.upsertFocus(this.data.init_sec);
+            this.updateUserTotalTime(this.data.init_sec)
             this.goBack();
           }
         });
@@ -60,6 +61,17 @@ Page({
       }
 
     })
+  },
+  updateUserTotalTime: function (addtime) {
+    const dbname = 'users';
+    const db = wx.cloud.database();
+    const _ = db.command
+    db.collection(dbname)
+      .update({
+        data: {
+          sumFocusTime: _.inc(addtime)
+        }
+      })
   },
   stopTimerButton: function () {
     wx.showModal({
