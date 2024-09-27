@@ -9,6 +9,7 @@ Page({
       avatarUrl: '', // 头像
       nickName: '',  // 昵称
       sumFocusTime: 0,  // 累计专注时长
+      gold:0,
       group: '',     // 小组
       creationDate: '', // 创建账号日期
       cellList: [
@@ -82,6 +83,7 @@ Page({
                         avatarUrl: '',
                         nickName: '',
                         sumFocusTime: 0,
+                        gold:0,
                         group: '',
                         creationDate: ''
                     });
@@ -109,6 +111,7 @@ Page({
                     sumFocusTime: userData.sumFocusTime || 0,
                     group: userData.group || '未分组',
                     creationDate: userData.creationDate || '未知',
+                    gold:userData.gold || 0,
                 });
             } else {
                 // 如果没有对应的用户数据，则创建新用户数据
@@ -119,6 +122,7 @@ Page({
                     data: {
                         openId: openId,
                         sumFocusTime: 0,
+                        gold:0,
                         group: '未分组',
                         creationDate: creationDate // 保存格式化后的日期
                     }
@@ -127,6 +131,7 @@ Page({
                     // 创建成功后，将初始化的数据设置到页面上
                     this.setData({
                         sumFocusTime: 0,
+                        gold:0,
                         group: '未分组',
                         creationDate: creationDate // 设置格式化后的日期
                     });
@@ -164,6 +169,7 @@ Page({
     // 如果已登录并且有 openId，加载用户数据
     if (login && openId) {
         this.loadUserData();
+        getApp().globalData.openId = openId;
     }
     console.log("AAAAAAAAAA")
     console.log(this.data.openId)

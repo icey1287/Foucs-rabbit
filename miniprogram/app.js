@@ -16,5 +16,7 @@ App({
     }
 
     this.globalData = {};
+    const openId = wx.getStorageSync('openId');
+    this.globalData.openId=openId;
   }
 });
