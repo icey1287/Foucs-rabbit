@@ -18,3 +18,5 @@ project.private.config.json
 .cloudbase/
 #云函数(云文件夹右键同步即可)
 .cloudfunctions/
+#vscode配置
+.vscode/

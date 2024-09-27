@@ -167,6 +167,7 @@ Page({
     }
     console.log("AAAAAAAAAA")
     console.log(this.data.openId)
+    getApp().globalData.openId=this.data.openId
   },
 
   /**

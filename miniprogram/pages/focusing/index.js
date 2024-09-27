@@ -1,30 +1,16 @@
-const { CREATE_INSTANCE } = require("XrFrame/kanata/lib/kanata");
-
+const DoNotCallCloudFunc = true;
 Page({
   data: {
     init_min: 0, // 初始倒计时时间（分钟）
     init_sec: 0, // 初始倒计时时间（分钟）
     left_min: '00',
     left_sec: '00',
-    timer: null
-  },
+    timer: null,
 
-  onLoad: function (options) {
-    this.data.init_min = this.data.left_min = options["min"]
-    console.log("this.data.init_min:", this.data.init_min, "this.data.left_min:", this.data.left_min)
-    this.data.init_sec = this.data.left_sec = options["sec"]
-    // this.data.minutes = this.data.init_min
-    this.startTimer();
-    // const eventChannel = this.getOpenerEventChannel();
-    // console.log(options)
-    //  eventChannel.on('args', (res) => {
-    //    console.log("Focusing:OnLoad:Args:",res.init_min) 
-    //    this.data.init_min=res.init_min;
-    //    console.log(this.data)
-    //    this.startTimer();
-    //  })
-  },
+    backgroundImage: 'http://hbimg.huaban.com/e92af58a83fa3803116302760183d4f916a17be72db3eb-qIXn3T',
+    backgroundAudio: '/audios/Aria.mp3'
 
+  },
   startTimer: function () {
     let totalSeconds = Number(this.data.init_min * 60) + Number(this.data.init_sec);
     this.data.timer = setInterval(() => {
@@ -35,12 +21,14 @@ Page({
           content: '倒计时结束！获得宠物?',//TODO
           showCancel: false,
           success: (res) => {
-            if (this.data.init_min == 0) {
-              this.upsertFocus(this.data.init_sec);
-              this.updateUserTotalTime(this.data.init_sec)
-            } else {//测试用5sec <=> 5min
-              this.upsertFocus(this.data.init_min);
-              this.updateUserTotalTime(this.data.init_min)
+            if (!DoNotCallCloudFunc) {//TEST:测试用5sec <=> 5min
+              if (this.data.init_min == 0) {
+                this.upsertFocus(this.data.init_sec);
+                this.updateUserTotalTime(this.data.init_sec)
+              } else {
+                this.upsertFocus(this.data.init_min);
+                this.updateUserTotalTime(this.data.init_min)
+              }
             }
             this.goBack();
           }
@@ -78,7 +66,7 @@ Page({
     const _ = db.command
     db.collection(dbname).get().then(res => {
       if (res.data.length === 0) {
-        console.log("focus:err:", "我没在focus表?")
+        console.log("focus:err:", "我没在focus表?请登录以创建focus表")
         return;
       }
       const user = res.data[0]
@@ -112,8 +100,51 @@ Page({
       url: '../home/index',
     })
   },
+  /***********************************************************************/
+  onLoad: function (options) {
+    this.data.init_min = this.data.left_min = options["min"]
+    console.log("this.data.init_min:", this.data.init_min, "this.data.left_min:", this.data.left_min)
+    this.data.init_sec = this.data.left_sec = options["sec"]
+
+
+    // 继续播放音频的代码
+    const fs = wx.getFileSystemManager()
+    fs.access({
+      path: this.data.backgroundAudio,
+      success: () => {
+        console.log('音频文件存在')
+        const innerAudioContext = wx.createInnerAudioContext()
+        innerAudioContext.src = this.data.backgroundAudio
+        innerAudioContext.onError((err) => {
+          console.error('音频播放失败', err)
+        })
+        innerAudioContext.play()
+      },
+      fail: (err) => {
+        console.error('音频文件不存在', err)
+      }
+    })
+
+
+
+    // this.data.minutes = this.data.init_min
+    this.startTimer();
+    // const eventChannel = this.getOpenerEventChannel();
+    // console.log(options)
+    //  eventChannel.on('args', (res) => {
+    //    console.log("Focusing:OnLoad:Args:",res.init_min) 
+    //    this.data.init_min=res.init_min;
+    //    console.log(this.data)
+    //    this.startTimer();
+    //  })
+  },
+  onUnload: function () {
+    if (this.backgroundAudioManager) {
+      this.backgroundAudioManager.stop();
+    }
+  },
   onHide() {
-    console.log("HIDE")
+    // console.log("HIDE")
   },
   onShow() {
     wx.hideHomeButton({
