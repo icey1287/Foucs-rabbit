@@ -15,3 +15,6 @@ node_modules/
 
 # 私有配置
 project.private.config.json
+.cloudbase/
+#云函数(云文件夹右键同步即可)
+.cloudfunctions/
