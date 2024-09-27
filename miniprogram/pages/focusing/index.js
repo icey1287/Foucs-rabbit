@@ -1,4 +1,4 @@
-const DoNotCallCloudFunc = true;
+const DoNotCallCloudFunc = false;
 Page({
   data: {
     init_min: 0, // 初始倒计时时间（分钟）
