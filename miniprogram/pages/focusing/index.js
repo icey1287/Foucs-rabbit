@@ -1,7 +1,7 @@
 const DoNotCallCloudFunc = false;
 const fs = wx.getFileSystemManager()
 
-let  musicPlayer = null;
+let musicPlayer = null;
 Page({
   data: {
     // 初始倒计时时间 Number
@@ -54,10 +54,6 @@ Page({
   initMusic: function () {
     musicPlayer = wx.createInnerAudioContext()
     musicPlayer.src = this.data.musicPath[this.data.musicIndex]
-    musicPlayer.onEnded(function(_){//循环播放
-      musicPlayer.seek(0)
-      musicPlayer.play()
-    })
   },
   stopMusic: function () {
     if (musicPlayer) {
@@ -70,9 +66,14 @@ Page({
     fs.access({
       path: audioPath,
       success: () => {
+        musicPlayer.src = audioPath;
         console.log('focus:音频文件存在', audioPath)
         musicPlayer.onError((err) => {
           console.error('音频播放失败', err)
+        })
+        musicPlayer.onEnded(function (_) {//循环播放
+          musicPlayer.seek(0)
+          musicPlayer.play()
         })
         console.log("focus:Playing:", audioPath)
         musicPlayer.play()
@@ -147,8 +148,8 @@ Page({
     // wx.navigateBack();
     wx.reLaunch({
       url: '../home/index',
-      fail:function(){
-        console.log("focus:","跳转至主页失败")
+      fail: function () {
+        console.log("focus:", "跳转至主页失败")
       }
     })
   },
