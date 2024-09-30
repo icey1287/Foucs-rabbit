@@ -45,8 +45,8 @@
         </view>
 
         <!-- 退出登录 -->
-        <view class="cell">
+        <!-- <view class="cell"> -->
             <button class="logout-btn" bindtap="toDetail">退出登录</button>
-        </view>
+        <!-- </view> -->
     </view>
 </view>

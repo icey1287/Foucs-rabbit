@@ -1,4 +1,4 @@
-const { CREATE_INSTANCE } = require("XrFrame/kanata/lib/kanata");
+//const { CREATE_INSTANCE } = require("XrFrame/kanata/lib/kanata");
 
 Page({
   data: {
