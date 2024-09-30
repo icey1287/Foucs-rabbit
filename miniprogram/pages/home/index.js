@@ -32,6 +32,9 @@ Page({
     } else {
       wx.reLaunch({
         url: '../focusing/index' + "?min=" + this.data.tabList_min[this.data.select] + "&sec=" + this.data.tabList_sec[this.data.select],
+        fail:function(){
+        console.log("focus:","跳转至主页失败")
+        }
       })
     }
   },

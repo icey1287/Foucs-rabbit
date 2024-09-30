@@ -147,6 +147,9 @@ Page({
     // wx.navigateBack();
     wx.reLaunch({
       url: '../home/index',
+      fail:function(){
+        console.log("focus:","跳转至主页失败")
+      }
     })
   },
 

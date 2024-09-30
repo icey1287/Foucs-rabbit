@@ -3,5 +3,6 @@
 </picker>
 <view class="container" style="background-image: url('{{backgroundImage}}');">
   <view class="timer">{{left_min}}:{{left_sec}}</view>
-  <button class="stop-btn" bindtap="stopTimerUI">停止</button>
+  <!-- <button class="stop-btn" bindtap="stopTimerUI">停止</button> -->
+  <button class="apple-button" bindtap="stopTimerUI">停止</button>
 </view>
