@@ -177,7 +177,9 @@ Page({
 
   onHide() {
     console.log("focus:Hide")
-    // this.stopMusic();
+    if(musicPlayer.paused==false){
+      musicPlayer.pause()
+    }
   },
   onShow() {
     wx.hideHomeButton({
@@ -190,6 +192,9 @@ Page({
     });
     if(musicPlayer.paused==true){
       musicPlayer.play();
+    }else{
+      console.log("focus:","onShow but not paused?")
+      this.startMusic()
     }
   }
 }
