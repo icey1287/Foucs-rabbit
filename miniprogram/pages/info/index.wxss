@@ -1,1 +1,101 @@
 /* pages/info/index.wxss */
+.container {
+  padding: 20rpx;
+  background-color: #f0f4f7;
+}
+
+.section {
+  width: 100%;                 
+  margin-bottom: 20rpx;
+  background-color: #ffffff;
+  border-radius: 10rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.1);
+  padding: 20rpx;
+  box-sizing: border-box;      
+}
+
+.header {
+  font-size: 30rpx;
+  color: #333;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.util_button {
+  background-color: transparent; 
+  color: #333; 
+  border: 1px solid #ccc; 
+  border-radius: 5px;
+  padding: 8px 12px; 
+  cursor: pointer; 
+  transition: background-color 0.3s, color 0.3s; 
+}
+
+.util_button:hover {
+  background-color: #f0f0f0; /* 悬停时背景色 */
+  color:orange; /* 悬停时文字颜色 */
+}
+
+.util_center {
+  flex-grow: 1; /* 让这个元素占据剩余空间 */
+  text-align: center; 
+}
+
+.content {
+  margin-top: 20rpx;
+}
+
+.stats {
+  display: flex;
+  justify-content: space-between;
+}
+
+.stat-item {
+  text-align: center;
+}
+
+.label_a {
+  margin-left: 10px; 
+  margin-right: 10px; 
+  font-size: 24rpx;
+  color: #666;
+}
+
+.label_b {
+  margin-left: 50px; 
+  margin-right: 50px;
+  font-size: 24rpx;
+  color: #666;
+}
+
+.value_a {
+  font-size: 36rpx;
+  color: #333;
+  margin-top: 10rpx;
+}
+
+.value_b {
+  margin-left: 50px; 
+  margin-right: 50px;
+  font-size: 36rpx;
+  color: #333;
+  margin-top: 10rpx;
+}
+
+.unit {
+  font-size: 18rpx;         
+  vertical-align: bottom;   /* 将“分钟”放置在数字的右下角 */
+  margin-left: -5rpx;        /* 数字和“分钟”之间的间距 */
+}
+
+.icon {
+  width: 20px;           
+  height: 20px;          
+  margin-right: 8px;     
+}
+
+.header button {
+  font-size: 30rpx;
+  margin: 0 px; 
+}

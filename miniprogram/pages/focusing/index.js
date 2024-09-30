@@ -48,11 +48,13 @@ Page({
     const dbname = 'focus';
     const db = wx.cloud.database();
     const _ = db.command
+    addtime = Number(addtime)
     db.collection(dbname).add({
       data:
       {
         focusTime: addtime,
-        date: (new Date()).toDateString()
+        date: (new Date()).toDateString(),
+        date_stamp:Date.now()
       }
 
     })
