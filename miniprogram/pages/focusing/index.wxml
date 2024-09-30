@@ -1,5 +1,5 @@
 <!-- index.wxml -->
-<view class="container">
+<view class="container" style="background-image: url('{{backgroundImage}}');">
   <!-- <block wx:if="{{timer!=null}}"> -->
   <view class="timer">{{left_min}}:{{left_sec}}</view>
   <button class="stop-btn" bindtap="stopTimerButton">停止</button>

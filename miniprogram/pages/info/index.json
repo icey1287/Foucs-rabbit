@@ -1,4 +1,13 @@
-{
+{    
   "usingComponents": {
-  }
+  },
+  "navigationBarTitleText": "统计信息",
+  "navigationBarBackgroundColor": "#ffffff",  
+  "navigationBarTextStyle": "black",          
+  "enablePullDownRefresh": true,
+  "backgroundColor": "#efefef",
+  "backgroundTextStyle": "dark",
+  "backgroundColorBottom": "#ffffff", 
+  "onReachBottomDistance": 50              
 }
+
