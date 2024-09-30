@@ -169,10 +169,15 @@ Page({
     this.startTimer();
   },
   onUnload: function () {
+    console.log("focus:Unload")
     this.stopMusic();
   },
+
+
+
   onHide() {
-    this.stopMusic();
+    console.log("focus:Hide")
+    // this.stopMusic();
   },
   onShow() {
     wx.hideHomeButton({
@@ -183,6 +188,9 @@ Page({
         console.log("focus:", "hide homebutton success")
       }
     });
+    if(musicPlayer.paused==true){
+      musicPlayer.play();
+    }
   }
 }
 );
