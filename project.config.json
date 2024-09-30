@@ -22,6 +22,8 @@
     "useMultiFrameRuntime": true,
     "useApiHook": true,
     "useApiHostProcess": true,
+    "ignoreUploadUnusedFiles": true,
+    "ignoreDevUnusedFiles": false,
     "babelSetting": {
       "ignore": [],
       "disablePlugins": [],
@@ -34,8 +36,7 @@
     "userConfirmedBundleSwitch": false,
     "packNpmManually": false,
     "packNpmRelationList": [],
-    "minifyWXSS": true,
-    "ignoreUploadUnusedFiles": true
+    "minifyWXSS": true
   },
   "appid": "wxbe44b4ba7e383f0c",
   "projectname": "quickstart-wx-cloud",
