@@ -15,7 +15,39 @@
   margin-bottom: 20px;
 }
 
-button {
+.stop-btn {
   padding: 10px 20px;
   font-size: 16px;
+}
+
+picker {
+  font-size: 39px;
+}
+
+.floating-button {
+  position: absolute;
+  top: 6vw;
+  right: 6vw;
+  width: 13vw;
+  height: 13vw;
+  background-color: #f1f1f1;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  flex-grow: 1;
+  /* 添加阴影效果 */
+  font-size: 24px;
+}
+
+
+.picker-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 13vw;
+  height: 13vw;
+  object-fit: cover;
+  padding-left: 1vw;
 }

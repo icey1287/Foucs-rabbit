@@ -1,10 +1,7 @@
-<!-- index.wxml -->
+<picker class="floating-button" mode="selector" range="{{musicName}}" value="{{musicIndex}}" bindchange="musicSwitchUI">
+  <image class="picker-icon" src="../../images/music/play.svg" />
+</picker>
 <view class="container" style="background-image: url('{{backgroundImage}}');">
-  <!-- <block wx:if="{{timer!=null}}"> -->
   <view class="timer">{{left_min}}:{{left_sec}}</view>
-  <button class="stop-btn" bindtap="stopTimerButton">停止</button>
-  <!-- </block> -->
-  <!-- <block wx:else> -->
-  <!-- <text>Loading</text> -->
-  <!-- </block> -->
+  <button class="stop-btn" bindtap="stopTimerUI">停止</button>
 </view>

@@ -4,11 +4,9 @@ Page({
   /****************************************************/
   getTab(e) {
     const select = e.detail;
-    console.log("已选中", select)
     this.setData({
       select
     })
-    console.log("已更新", this.data.select)
     this.onLoad();
   },
   startFocus() {
@@ -38,7 +36,6 @@ Page({
     }
   },
   CloudFunctionTest() {
-    this.upsertFocus(60)
   },
 
   getUserInfoByOpenId: function (openid) {//TODO
@@ -106,5 +103,6 @@ Page({
    */
   onShareAppMessage() {
 
-  }
+  },
+
 })
