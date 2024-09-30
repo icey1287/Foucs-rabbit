@@ -15,17 +15,18 @@
         </view>
 
         <!-- 累计专注时长 -->
-        <view class="cell">
+        <view class="cell" bindtap="navigateToInfo">
             <view class="cell-left">
                 <text class="cell-left-text">累计专注时长</text>
             </view>
             <view class="cell-right">
-                <text class="cell-right-text">{{ sumFocusTime ? sumFocusTime + ' 分钟' : '0分钟' }}</text>
+                <text class="cell-right-text" space="emsp">{{ sumFocusTime ? sumFocusTime + '分钟' : '0分钟' }}</text>
             </view>
+            <!-- <icon type="right-arrow" /> -->
         </view>
 
         <!-- 小组 -->
-        <view class="cell">
+        <view class="cell" bindtap="navigateToGroup">
             <view class="cell-left">
                 <text class="cell-left-text">小组</text>
             </view>
@@ -40,13 +41,11 @@
                 <text class="cell-left-text">创建账号日期</text>
             </view>
             <view class="cell-right">
-                <text class="cell-right-text">{{ creationDate || '暂无日期' }}</text>
+                <text class="cell-right-text" space="emsp">{{ creationDate || '暂无日期' }}</text>
             </view>
         </view>
 
         <!-- 退出登录 -->
-        <!-- <view class="cell"> -->
-            <button class="logout-btn" bindtap="toDetail">退出登录</button>
-        <!-- </view> -->
+        <button class="logout-btn" bindtap="toDetail">退出登录</button>
     </view>
 </view>

@@ -4,9 +4,12 @@
     "pages/me/index",
     "pages/info/index",
     "pages/pet/index",
-    "pages/focusing/index"
+    "pages/focusing/index",
+    "pages/group/index"
   ],
-  "requiredBackgroundModes": ["audio"],
+  "requiredBackgroundModes": [
+    "audio"
+  ],
   "window": {
     "backgroundColor": "#F6F6F6",
     "backgroundTextStyle": "light",

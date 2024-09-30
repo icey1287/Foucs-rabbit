@@ -185,5 +185,18 @@ Page({
               select: 4
           });
       }
+  },
+    // 跳转到 info 页面
+    navigateToInfo() {
+      wx.switchTab({
+          url: '../info/index'
+      });
+  },
+
+  // 跳转到 group 页面
+  navigateToGroup() {
+      wx.navigateTo({
+          url: '../group/index'
+      });
   }
 });
