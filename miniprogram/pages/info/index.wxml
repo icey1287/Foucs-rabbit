@@ -1,2 +1,90 @@
-<!--pages/info/index.wxml-->
-<text>pages/info/index.wxml</text>
+<view class="container">
+  <view class="section">
+    <view class="header">
+      累计专注
+     
+    </view>
+    <view class="content">
+      <view class="stats">
+        <view class="stat-item">
+          <view class="label_a">次数</view>
+          <view class="value_a">{{totalStudyCount}}</view>
+        </view>
+        <view class="stat-item">
+          <view class="label_a">时长</view>
+          <view class="value_a">{{ totalFocusTime}} <text class="unit">分钟</text></view>
+        </view>
+        <view class="stat-item">
+          <view class="label_a">日均时长</view>
+          <view class="value_a">{{averageFocusTime}} <text class="unit">分钟</text></view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 当日专注模块 -->
+  <view class="section">
+    <view class="header">
+      <button class="util_button" bindtap="subtractDay">前一天</button>
+      <view class="util_center">当日专注 {{currentDate}}</view>
+      <button class="util_button" bindtap="addDay">后一天</button>
+    </view>
+
+    <view class="content">
+      <view class="stats">
+        <view class="stat-item">
+          <view class="label_b">次数</view>
+          <view class="value_b">{{studyCount_day}}</view>
+        </view>
+        <view class="stat-item">
+          <view class="label_b">时长</view>
+          <view class="value_b">{{ focusTime_day}} <text class="unit">分钟</text></view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 当月专注模块 -->
+  <view class="section">
+    <view class="header">
+      <button class="util_button" bindtap="subtractMonth">前一个月</button>
+      <view class="util_center">当月专注 {{currentMonth}}</view>
+      <button class="util_button" bindtap="addMonth">后一个月</button>
+    </view>
+
+    <view class="content">
+      <view class="stats">
+        <view class="stat-item">
+          <view class="label_b">次数</view>
+          <view class="value_b">{{studyCount_month}}</view>
+        </view>
+        <view class="stat-item">
+          <view class="label_b">时长</view>
+          <view class="value_b">{{focusTime_month}} <text class="unit">分钟</text></view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 当年专注模块 -->
+  <view class="section">
+    <view class="header">
+      <button class="util_button" bindtap="subtractYear">前一年</button>
+         <view class="util_center">当年专注 {{currentYear}}</view>
+      <button class="util_button" bindtap="addYear">后一年</button>
+    </view>
+
+    <view class="content">
+      <view class="stats">
+        <view class="stat-item">
+          <view class="label_b">次数</view>
+          <view class="value_b">{{studyCount_year}}</view>
+        </view>
+        <view class="stat-item">
+          <view class="label_b">时长</view>
+          <view class="value_b">{{focusTime_year}} <text class="unit">分钟</text></view>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>
