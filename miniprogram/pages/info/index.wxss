@@ -34,7 +34,7 @@
 
 .util_button:hover {
   background-color: #f0f0f0; /* 悬停时背景色 */
-  color:orange; /* 悬停时文字颜色 */
+  color:red; /* 悬停时文字颜色 */
 }
 
 .util_center {
