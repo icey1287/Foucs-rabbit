@@ -1,11 +1,12 @@
 {    
   "usingComponents": {
+    "ec-canvas": "../../ec-canvas/ec-canvas"
   },
-  "navigationBarTitleText": "统计信息",
-  "navigationBarBackgroundColor": "#ffffff",  
+  "navigationBarTitleText": "小🥕统计信息",
+  "navigationBarBackgroundColor": "#FFF5EE",  
   "navigationBarTextStyle": "black",          
   "enablePullDownRefresh": true,
-  "backgroundColor": "#efefef",
+  "backgroundColor": "#f0f0f0",
   "backgroundTextStyle": "dark",
   "backgroundColorBottom": "#ffffff", 
   "onReachBottomDistance": 50              
