@@ -28,7 +28,7 @@
   <view class="pet-images" wx:if="{{currentPet.state<5}}">
     <image class="pet_image" src="{{currentPet.image0}}"></image>
     <text class="pet-name">{{currentPet.name}}</text>
-    <text clsaa="pet-age">成长阶段：青年</text>
+    <text clsaa="pet-age">成长阶段：幼崽</text>
   </view>
   <view class="pet-images" wx:elif="{{currentPet.state>=5&&currentPet.state<10}}">
     <image class="pet_image" src="{{currentPet.image}}"></image>
@@ -40,8 +40,8 @@
     <text class="pet-name">{{currentPet.name}}</text>
     <text clsaa="pet-age">成长阶段：成年</text>
   </view>
-      <text>等级: {{currentPet.state}}</text> 
-      <text>每次升级需要500金币。</text>
+      <text class="pet_info">等级: {{currentPet.state}}</text> 
+      <text class="pet_info">每次升级需要500金币。</text>
       <button type="primary" bindtap="upgradePet">升级宠物</button>
       <button type="default" bindtap="cancelTraining">返回</button>
     </view>

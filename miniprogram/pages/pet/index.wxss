@@ -5,7 +5,7 @@
 .header 
 {
   margin-bottom: 10px;
-  background-color: #0e965262; /* 蓝色背景 */
+  background-color: #0e965262; 
   padding: 10px; /* 增加内边距 */
   width: 100vw; /* 确保宽度占满一行 */
 }
@@ -80,4 +80,10 @@
   border-radius: 50%;
   margin-top: 20px;
   margin-bottom: 20px;
+}
+.pet_info
+{
+  display: block;
+  text-align:center;
+
 }
