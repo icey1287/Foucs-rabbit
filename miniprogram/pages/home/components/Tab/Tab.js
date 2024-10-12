@@ -1,17 +1,21 @@
+// tab.js
 Component({
-    properties: {
-        tabList: Array
-    },
-    data: {
-        select: 0
-    },
-    methods: {
-        selectTab(e) {
-            const { id } = e.currentTarget.dataset;
-            this.setData({
-                select: id,
-            })
-            this.triggerEvent('gettab', id);
-        },
+  properties: {
+    tabList: {
+      type: Array,
+      value: []
     }
+  },
+
+  data: {
+    currentTab: 0
+  },
+
+  methods: {
+    handleTabTap(e) {
+      const index = e.currentTarget.dataset.index;
+      this.setData({ currentTab: index });
+      this.triggerEvent('gettab', { index, value: this.data.tabList[index] });
+    }
+  }
 })

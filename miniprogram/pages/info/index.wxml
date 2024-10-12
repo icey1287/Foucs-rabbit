@@ -2,7 +2,7 @@
   <view class="section">
     <view class="header">
       累计专注
-     
+      <image class="_icon" src="../../images/pa_mu.png"></image>
     </view>
     <view class="content">
       <view class="stats">
@@ -22,7 +22,6 @@
     </view>
   </view>
 
-  <!-- 当日专注模块 -->
   <view class="section">
     <view class="header">
       <button class="util_button" bindtap="subtractDay">前一天</button>
@@ -70,7 +69,7 @@
   <view class="section">
     <view class="header">
       <button class="util_button" bindtap="subtractYear">前一年</button>
-         <view class="util_center">当年专注 {{currentYear}}</view>
+      <view class="util_center">当年专注 {{currentYear}}</view>
       <button class="util_button" bindtap="addYear">后一年</button>
     </view>
 
@@ -87,4 +86,34 @@
       </view>
     </view>
   </view>
+
+  <view class="section">
+    <view class="header">
+      <button class="util_button" bindtap="subtractWeek">前一周</button>
+      <image class="icon" src="../../images/yan_qin01.png"></image>
+      <button class="util_button" bindtap="addWeek">后一周</button>
+    </view>
+
+  <!-- 折线图模块 -->
+  <view class="chart-container">
+  <!-- ECharts 组件 -->
+  <ec-canvas  id="weekChart" canvas-id="weekChart" ec="{{ weekChart }}"></ec-canvas>
+  </view>
+  <view class="util_center">周：{{weekStart}}~{{weekEnd}}</view>
+  </view>  
+
+  <view class="section">
+    <view class="header">
+      <button class="util_button" bindtap="subtractYear_">前一年</button>
+      <image class="icon" src="../../images/yan_qin02.png"></image>
+      <button class="util_button" bindtap="addYear_">后一年</button>
+    </view>
+
+  <!-- 折线图模块 -->
+  <view class="chart-container">
+    <ec-canvas  id="monthChart" canvas-id="monthChart" ec="{{ monthChart }}"></ec-canvas>
+  </view>
+  <view class="util_center">年：{{_Year}}</view>
+  </view>  
+
 </view>

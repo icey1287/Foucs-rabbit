@@ -1,17 +1,16 @@
-/* pages/info/index.wxss */
 .container {
   padding: 20rpx;
-  background-color: #f0f4f7;
+  background-color: #FFDAB9;
 }
 
 .section {
-  width: 100%;                 
+  width: 100%;                  /* 让 section 占满屏幕宽度 */
   margin-bottom: 20rpx;
   background-color: #ffffff;
   border-radius: 10rpx;
   box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.1);
   padding: 20rpx;
-  box-sizing: border-box;      
+  box-sizing: border-box;       /* 确保 padding 不影响 width */
 }
 
 .header {
@@ -23,18 +22,18 @@
 }
 
 .util_button {
-  background-color: transparent; 
-  color: #333; 
-  border: 1px solid #ccc; 
-  border-radius: 5px;
-  padding: 8px 12px; 
-  cursor: pointer; 
-  transition: background-color 0.3s, color 0.3s; 
+  background-color: transparent; /* 透明背景 */
+  color: #333; /* 深色文字 */
+  border: 1px solid #ccc; /* 边框颜色 */
+  border-radius: 5px; /* 圆角 */
+  padding: 8px 12px; /* 增加内边距 */
+  cursor: pointer; /* 鼠标悬停时显示手型 */
+  transition: background-color 0.3s, color 0.3s; /* 增加过渡效果 */
 }
 
 .util_button:hover {
   background-color: #f0f0f0; /* 悬停时背景色 */
-  color:orange; /* 悬停时文字颜色 */
+  color:red; /* 悬停时文字颜色 */
 }
 
 .util_center {
@@ -70,6 +69,7 @@
 }
 
 .value_a {
+  /* margin-left: 20px;  */
   font-size: 36rpx;
   color: #333;
   margin-top: 10rpx;
@@ -84,18 +84,40 @@
 }
 
 .unit {
-  font-size: 18rpx;         
+  font-size: 18rpx;         /* 设置字体大小 */
   vertical-align: bottom;   /* 将“分钟”放置在数字的右下角 */
-  margin-left: -5rpx;        /* 数字和“分钟”之间的间距 */
+  margin-left: -5rpx;        
+  /* 数字和“分钟”之间的间距 */
 }
 
 .icon {
-  width: 20px;           
-  height: 20px;          
-  margin-right: 8px;     
+  width: 50px;           /* 设置图片宽度为24px */
+  height: 50px;          /* 高度自适应保持比例 */
+  /* margin-right: 8px;     右侧留一些间距 */
+}
+
+._icon {
+  width: 30px;           /* 设置图片宽度为24px */
+  height: 30px;          /* 高度自适应保持比例 */
+  /* margin-right: 8px;     右侧留一些间距 */
 }
 
 .header button {
   font-size: 30rpx;
-  margin: 0 px; 
+  margin: 0 px; /* 按钮与文本之间的间距 */
+}
+
+/* 设置容器样式 */
+.chart-container {
+  width: 100%;
+  height: 60vh; /* 将图表充满整个页面 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 设置图表样式 */
+ec-canvas {
+  width: 100%;
+  height: 400px;
 }

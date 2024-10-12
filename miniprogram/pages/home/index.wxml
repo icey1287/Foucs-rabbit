@@ -1,12 +1,16 @@
-<!--pages/home/index.wxml-->
-<image style="width:100%;background-color: #000000;" mode="scaleToFill" src="../../images/focusing_from_xiaomi.png"></image>
-
-<view class="tab_container">
-  <Tab tabList="{{ tabList }}" bindgettab="getTab"  />
+<!-- pages/home/index.wxml -->
+<view class="container">
+  <image class="img" mode="scaleToFill" src="../../images/bg_focus_settings.webp"></image>
+  <view class="quote-1-out">
+    <text class="quote-1-inner">暂别手机,遇见更好的自己</text>
+  </view>
+  <view class="quote-2-out">
+    <text class="quote-2-inner">享受那份源自内心的宁静</text>
+  </view>
+  <view class="tab_container">
+    <Tab tabList="{{ tabList }}" bindgettab="getTab" />
+  </view>
+  <view class="focus-button-container">
+    <button bind:tap="startFocus" class="apple-button" style="font-size: {{40}}rpx;">开始专注</button>
+  </view>
 </view>
-
-<view class="focus-button-container">
-  <button bind:tap="startFocus" class="focus-button" style="font-size: {{40}}rpx;">开始专注</button>
-</view>
-
-<!-- <button bind:tap="CloudFunctionTest" >CloudFunctionTest</button> -->

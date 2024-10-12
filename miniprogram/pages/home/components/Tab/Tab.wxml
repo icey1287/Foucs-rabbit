@@ -1,6 +1,15 @@
-<view class="tab">
-    <view class="tab-item {{ select !== index ? 'tab-default' : '' }}" wx:for="{{ tabList }}" wx:key="index" bindtap="selectTab" data-id="{{ index }}">
-        <text>{{ item }}</text>
-        <view wx:if="{{ select === index }}" class="tab-line"></view>
+<!-- tab.wxml -->
+<view class="tab-container">
+  <scroll-view class="tab-scroll" scroll-x="true" scroll-with-animation="true">
+    <view class="tab-content">
+      <view wx:for="{{tabList}}" wx:key="index" class="tab-item {{currentTab === index ? 'active' : ''}}" bindtap="handleTabTap" data-index="{{index}}">
+        <view class="tab-item-1-out">
+          <text class="tab-item-1-inner">{{item}}</text>
+        </view>
+        <view class="tab-item-2-out">
+          <text class="tab-item-2-inner">分钟</text>
+        </view>
+      </view>
     </view>
+  </scroll-view>
 </view>

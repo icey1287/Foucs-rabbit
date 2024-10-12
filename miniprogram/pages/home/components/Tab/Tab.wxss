@@ -1,27 +1,45 @@
-
-.tab {
-    display: flex;
-    width: 100%;
-    background-color: #fff;
+/* tab.wxss */
+.tab-container {
+  width: 100%;
+  height: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  margin-top:5%;
+  margin-bottom:5%;
 }
 
+.tab-scroll {
+  width: 100%;
+  height: 100%;
+}
+
+.tab-content {
+  width: 100%;
+  height: 100%;
+  display: flex;
+}
+.tab-item-1-inner{
+  font-size: 10vw;
+}
+.tab-item-2-inner{
+  font-size: 3vw;
+}
 .tab-item {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 30rpx 0;
-    position: relative;
+  height: auto;
+  aspect-ratio: 1 / 1;
+  display: inline-flex;
+  flex-direction: column; 
+  justify-content: center;
+  align-items: center;
+  padding: 10rpx 20rpx;
+  margin: 0 10rpx;
+  background-color: #fff;
+  color: black;
+  border-radius: 60rpx;
+  transition: all 0.3s ease;
 }
 
-.tab-line {
-    position: absolute;
-    width: 65%;
-    height: 0;
-    border: 3rpx solid #ffd23c;
-    bottom: 0;
-}
-
-.tab-default {
-    background-color: #f3f3f3;
+.tab-item.active {
+  background-color: #316096;
+  color:white;
 }
