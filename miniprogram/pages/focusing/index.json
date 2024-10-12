@@ -1,4 +1,5 @@
 {
   "usingComponents": {},
-  "navigationBarTitleText": "正在专注"
+  "navigationBarTitleText": "正在专注",
+  "navigationStyle": "custom"
 }

@@ -4,11 +4,9 @@ Page({
   /****************************************************/
   getTab(e) {
     const select = e.detail;
-    console.log("已选中", select)
     this.setData({
       select
     })
-    console.log("已更新", this.data.select)
     this.onLoad();
   },
   startFocus() {
@@ -34,11 +32,13 @@ Page({
     } else {
       wx.reLaunch({
         url: '../focusing/index' + "?min=" + this.data.tabList_min[this.data.select] + "&sec=" + this.data.tabList_sec[this.data.select],
+        fail:function(){
+        console.log("focus:","跳转至主页失败")
+        }
       })
     }
   },
   CloudFunctionTest() {
-    this.upsertFocus(60)
   },
 
   getUserInfoByOpenId: function (openid) {//TODO
@@ -106,5 +106,6 @@ Page({
    */
   onShareAppMessage() {
 
-  }
+  },
+
 })

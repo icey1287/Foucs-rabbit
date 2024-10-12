@@ -1,23 +1,32 @@
 
 const DoNotCallCloudFunc = false;
+const fs = wx.getFileSystemManager()
+
+let musicPlayer = null;
 
 Page({
   data: {
-    init_min: 0, // 初始倒计时时间（分钟）
-    init_sec: 0, // 初始倒计时时间（分钟）
+    // 初始倒计时时间 Number
+    init_min: 0,
+    init_sec: 0,
+
     left_min: '00',
     left_sec: '00',
     timer: null,
 
-    backgroundImage: 'http://hbimg.huaban.com/e92af58a83fa3803116302760183d4f916a17be72db3eb-qIXn3T',
-    backgroundAudio: '/audios/Aria.mp3'
+    backgroundImage: 'https://kkimgs.yisou.com/ims?kt=url&at=smstruct&key=aHR0cHM6Ly9pbWcuemNvb2wuY24vY29tbXVuaXR5LzAxYmU4ZjU4Nzc1YTg5YTgwMTIwNjBjOGJiMzYzZi5qcGdAMTI4MHdfMWxfMm9fMTAwc2guanBn&sign=yx:j7giMzRmoBbqFMRou1Is4bvbT8A=&tv=400_400',
 
+    musicName: ["英语", "英语2"],
+    musicPath: ["/audios/Aria.mp3", "/audios/Guy.mp3"],
+
+    musicIndex: 0,
   },
   startTimer: function () {
     let totalSeconds = Number(this.data.init_min * 60) + Number(this.data.init_sec);
     this.data.timer = setInterval(() => {
       if (totalSeconds <= 0) {
         clearInterval(this.data.timer);
+        this.stopMusic();
         wx.showModal({
           title: '提示',
           content: '倒计时结束！获得宠物?',//TODO
@@ -25,10 +34,10 @@ Page({
           success: (res) => {
             if (!DoNotCallCloudFunc) {//TEST:测试用5sec <=> 5min
               if (this.data.init_min == 0) {
-                this.upsertFocus(this.data.init_sec);
+                this.addFocusRecord(this.data.init_sec);
                 this.updateUserTotalTime(this.data.init_sec)
               } else {
-                this.upsertFocus(this.data.init_min);
+                this.addFocusRecord(this.data.init_min);
                 this.updateUserTotalTime(this.data.init_min)
               }
             }
@@ -44,9 +53,44 @@ Page({
       });
     }, 1000);
   },
-
+  initMusic: function () {
+    musicPlayer = wx.createInnerAudioContext()
+    musicPlayer.src = this.data.musicPath[this.data.musicIndex]
+  },
+  stopMusic: function () {
+    if (musicPlayer) {
+      musicPlayer.stop();
+    }
+  },
+  //切换到musicPath[index]
+  startMusic: function () {
+    const audioPath = this.data.musicPath[this.data.musicIndex]
+    fs.access({
+      path: audioPath,
+      success: () => {
+        musicPlayer.src = audioPath;
+        console.log('focus:音频文件存在', audioPath)
+        musicPlayer.onError((err) => {
+          console.error('音频播放失败', err)
+        })
+        musicPlayer.onEnded(function (_) {//循环播放
+          musicPlayer.seek(0)
+          musicPlayer.play()
+        })
+        console.log("focus:Playing:", audioPath)
+        musicPlayer.play()
+      },
+      fail: (err) => {
+        console.error('focus:音频文件不存在', err)
+      }
+    })
+  },
+  restartMusic: function () {
+    this.stopMusic();
+    this.startMusic();
+  },
   //插入focus一条专注记录
-  upsertFocus: function (addtime) {
+  addFocusRecord: function (addtime) {
     const dbname = 'focus';
     const db = wx.cloud.database();
     const _ = db.command
@@ -56,9 +100,8 @@ Page({
       {
         focusTime: addtime,
         date: (new Date()).toDateString(),
-        date_stamp:Date.now()
+        date_stamp: Date.now()
       }
-
     })
   },
   //更新users表的sumFocusTime和gold
@@ -83,12 +126,14 @@ Page({
         })
     })
   },
-  stopTimerButton: function () {
+  stopTimerUI: function () {
     wx.showModal({
       title: '提示',
       content: '确定要停止倒计时吗？',
       success: (res) => {
         if (res.confirm) {
+          this.stopMusic();
+          clearInterval(this.data.timer);
           this.goBack();
         } else {
           return;
@@ -97,68 +142,62 @@ Page({
       }
     });
   },
+  //
   goBack: function () {
+    // console.log("focus:goBack")
     clearInterval(this.data.timer);
+    this.stopMusic();
     // wx.navigateBack();
     wx.reLaunch({
       url: '../home/index',
+      fail: function () {
+        console.log("focus:", "跳转至主页失败")
+      }
     })
+  },
+
+  musicSwitchUI: function (e) {
+    this.data.musicIndex = Number(e.detail.value)
+    this.restartMusic();
   },
   /***********************************************************************/
   onLoad: function (options) {
-    this.data.init_min = this.data.left_min = options["min"]
-    console.log("this.data.init_min:", this.data.init_min, "this.data.left_min:", this.data.left_min)
-    this.data.init_sec = this.data.left_sec = options["sec"]
-
-
-    // 继续播放音频的代码
-    const fs = wx.getFileSystemManager()
-    fs.access({
-      path: this.data.backgroundAudio,
-      success: () => {
-        console.log('音频文件存在')
-        const innerAudioContext = wx.createInnerAudioContext()
-        innerAudioContext.src = this.data.backgroundAudio
-        innerAudioContext.onError((err) => {
-          console.error('音频播放失败', err)
-        })
-        innerAudioContext.play()
-      },
-      fail: (err) => {
-        console.error('音频文件不存在', err)
-      }
-    })
-
-
-
-    // this.data.minutes = this.data.init_min
+    this.data.left_min = options["min"]
+    this.data.init_min = Number(options["min"])
+    this.data.left_sec = options["sec"]
+    this.data.init_sec = Number(options["sec"])
+    this.initMusic();
+    this.startMusic();
     this.startTimer();
-    // const eventChannel = this.getOpenerEventChannel();
-    // console.log(options)
-    //  eventChannel.on('args', (res) => {
-    //    console.log("Focusing:OnLoad:Args:",res.init_min) 
-    //    this.data.init_min=res.init_min;
-    //    console.log(this.data)
-    //    this.startTimer();
-    //  })
   },
   onUnload: function () {
-    if (this.backgroundAudioManager) {
-      this.backgroundAudioManager.stop();
-    }
+    console.log("focus:Unload")
+    this.stopMusic();
   },
+
+
+
   onHide() {
-    // console.log("HIDE")
+    console.log("focus:Hide")
+    if(musicPlayer.paused==false){
+      musicPlayer.pause()
+    }
   },
   onShow() {
     wx.hideHomeButton({
       success: function () {
-        console.log("focusing:", "hide homebutton success")
+        console.log("focus:", "hide homebutton success")
       },
       fail: function () {
-        console.log("focusing:", "hide homebutton success")
+        console.log("focus:", "hide homebutton success")
       }
     });
+    if(musicPlayer.paused==true){
+      musicPlayer.play();
+    }else{
+      console.log("focus:","onShow but not paused?")
+      this.startMusic()
+    }
   }
 }
 );

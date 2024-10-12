@@ -11,11 +11,82 @@
 }
 
 .timer {
-  font-size: 48px;
+  font-size: 56px;
   margin-bottom: 20px;
 }
 
-button {
+.stop-btn {
   padding: 10px 20px;
   font-size: 16px;
+}
+
+picker {
+  font-size: 39px;
+}
+
+.floating-button {
+  position: absolute;
+  bottom: 6vw;
+  right: 6vw;
+  width: 13vw;
+  height: 13vw;
+  background-color: #f1f1f1;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  flex-grow: 1;
+  /* 添加阴影效果 */
+  font-size: 24px;
+}
+
+
+.picker-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 13vw;
+  height: 13vw;
+  object-fit: cover;
+  padding-left: 1vw;
+}
+
+
+
+.apple-button {
+  display: inline-block;
+  position: relative;
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: bold;
+  color: #fff;
+  background-color: #3d3d3d;
+  border-radius: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.apple-button:before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90%;
+  height: 90%;
+  background-color: #4a4a4a;
+  border-radius: 20px;
+  z-index: -1;
+  transition: all 0.3s ease;
+}
+
+.apple-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+}
+
+.apple-button:hover:before {
+  width: 100%;
+  height: 100%;
 }
