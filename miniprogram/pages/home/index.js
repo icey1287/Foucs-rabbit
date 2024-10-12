@@ -4,18 +4,10 @@ Page({
   /****************************************************/
   getTab(e) {
     const select = e.detail;
-    this.setData({
-      select
-    })
-    this.onLoad();
+    this.setData({ select:select.index });
+    console.log("home:select:",select)
   },
   startFocus() {
-    // wx.navigateTo({
-    //     url: '../focusing/index'+"?min="+this.data.tabList_min[this.data.select]+"&sec="+this.data.tabList_sec[this.data.select],
-    //     // success:(res)=>{
-    // 		// 	res.eventChannel.emit('args',{focus_target_time:this.data.tabList_min[this.data.select]})
-    // 		// }
-    //   });
     let openid = app.globalData["openId"];
     if (openid == undefined || openid == null) {
       wx.showModal({
@@ -51,8 +43,8 @@ Page({
    * 页面的初始数据
    */
   data: {
-    tabList: ['5s', '25min', '40min', '60min', '自定义'],
-    tabList_min: ['0', '25', '40', '60', '0'],
+    tabList: ['5', '25', '40', '60', '120'],
+    tabList_min: ['0', '25', '40', '60', '120'],
     tabList_sec: ['5', '0', '0', '0', '0'],
     select: 0,
   },
