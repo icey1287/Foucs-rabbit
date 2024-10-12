@@ -1,2 +1,48 @@
-<!--pages/pet/index.wxml-->
-<text>pages/pet/index.wxml没有宠物</text>
+<view class="container" wx:if="{{isdetailed==false}}">
+  <view class="header">
+    <text class="title">宠物列表</text>
+  </view>
+  <view class="radishgold-container">
+    <image class="radish-gold" src="/images/radishGold.png"></image>
+    <text class="gold">{{totalGold}}</text> <!-- 显示金币数量 -->
+  </view>
+  <view clss="pet-container" >
+  <view class="pet-item" wx:for="{{pets}}" wx:key="index">
+    <image class="pet-image" src="{{item.image}}" mode="aspectFill"></image>
+    <view class="pet-info">
+      <text class="pet-name">{{item.name}}</text>
+      <view clss="pet-state" wx:if="{{item.state==0}}">
+      <text>宠物未拥有，请点击购买</text>
+      <button type="warn" bindtap="Buy" data-index="{{index}}">购买</button>
+      </view>
+      <view class="pet-state" wx:else="{{item.state!=0}}">
+      <button type="primary"bindtap="Search" data-index="{{index}}">详情</button>
+      </view>
+    </view>
+  </view>
+  </view>
+  <view>更多宠物请期待后续更新...</view>
+</view>
+<view class="training-container" wx:else="{{isdetailed==true}}">
+  <view class="pet-cultivate">
+  <view class="pet-images" wx:if="{{currentPet.state<5}}">
+    <image class="pet_image" src="{{currentPet.image0}}"></image>
+    <text class="pet-name">{{currentPet.name}}</text>
+    <text clsaa="pet-age">成长阶段：青年</text>
+  </view>
+  <view class="pet-images" wx:elif="{{currentPet.state>=5&&currentPet.state<10}}">
+    <image class="pet_image" src="{{currentPet.image}}"></image>
+    <text class="pet-name">{{currentPet.name}}</text>
+    <text clsaa="pet-age">成长阶段：青年</text>
+  </view>
+  <view class="pet-images" wx:else>
+    <image class="pet_image" src="{{currentPet.image1}}"></image>
+    <text class="pet-name">{{currentPet.name}}</text>
+    <text clsaa="pet-age">成长阶段：成年</text>
+  </view>
+      <text>等级: {{currentPet.state}}</text> 
+      <text>每次升级需要500金币。</text>
+      <button type="primary" bindtap="upgradePet">升级宠物</button>
+      <button type="default" bindtap="cancelTraining">返回</button>
+    </view>
+</view>

@@ -1,1 +1,83 @@
-/* pages/pet/index.wxss */
+.container
+ {
+  padding: 20px;
+}
+.header 
+{
+  margin-bottom: 10px;
+  background-color: #0e965262; /* 蓝色背景 */
+  padding: 10px; /* 增加内边距 */
+  width: 100vw; /* 确保宽度占满一行 */
+}
+.title 
+{
+  font-size: 32px;
+  font-weight: bold;
+  text-align:center;
+  color: white;
+  margin: 0; /* 去掉默认的外边距 */
+  display: block; /* 确保是块级元素 */
+}
+.radishgold-container
+{
+  margin-bottom: 30px;
+  position: relative; /* 设置为相对定位，以便内部的绝对定位元素以此为参考 */
+}
+.radish-gold
+{
+  width: 200px; /* 根据需要调整图片宽度 */
+  height: 67px; /* 根据需要调整图片高度 */
+}
+.gold
+{
+  position: absolute;
+  top: 7px; /* 距离图片顶部的距离 */
+  left: 75px; /* 距离图片左侧的距离 */
+  color:rgba(240, 110, 50, 0.808); /* 文本颜色，确保与背景形成对比 */
+  font-size: 34px; /* 字体大小，可以根据需要调整 */
+  padding: 2px 4px; /* 给文本加点内边距 */
+  border-radius: 4px; /* 圆角效果 */
+}
+.pet-container 
+{
+  display: flex; /* 启用 flexbox */
+  flex-wrap: wrap;
+}
+.pet-item 
+{
+  display: flex;
+  flex: 1 0 50%;
+  margin-bottom: 40px;
+}
+.pet-image {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  margin-right: 15px;
+}
+.pet-info 
+{
+  flex: 1;
+}
+.pet-name 
+{
+  text-align: center;
+  margin: 0; /* 去掉默认的外边距 */
+  display: block; /* 确保是块级元素 */
+  font-size: 36px;
+  font-weight: bold;
+}
+.pet-images
+{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.pet_image
+{
+  width: 250px;
+  height: 250px;
+  border-radius: 50%;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
