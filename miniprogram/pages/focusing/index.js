@@ -1,7 +1,9 @@
+
 const DoNotCallCloudFunc = false;
 const fs = wx.getFileSystemManager()
 
 let musicPlayer = null;
+
 Page({
   data: {
     // 初始倒计时时间 Number
@@ -14,8 +16,10 @@ Page({
 
     backgroundImage: 'https://kkimgs.yisou.com/ims?kt=url&at=smstruct&key=aHR0cHM6Ly9pbWcuemNvb2wuY24vY29tbXVuaXR5LzAxYmU4ZjU4Nzc1YTg5YTgwMTIwNjBjOGJiMzYzZi5qcGdAMTI4MHdfMWxfMm9fMTAwc2guanBn&sign=yx:j7giMzRmoBbqFMRou1Is4bvbT8A=&tv=400_400',
 
+
     musicName: ["英语", "英语2"],
     musicPath: ["/audios/Aria.mp3", "/audios/Guy.mp3"],
+
 
     musicIndex: 0,
   },
