@@ -5,7 +5,8 @@
     "pages/info/index",
     "pages/pet/index",
     "pages/focusing/index",
-    "pages/group/index"
+    "pages/group/index",
+    "pages/history/index"
   ],
   "requiredBackgroundModes": [
     "audio"

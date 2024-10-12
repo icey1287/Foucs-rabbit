@@ -44,6 +44,16 @@
                 <text class="cell-right-text" space="emsp">{{ creationDate || '暂无日期' }}</text>
             </view>
         </view>
+        <!-- 历史记录 -->
+        <view class="cell" bindtap="navigateToHistory">
+            <view class="cell-left">
+                <text class="cell-left-text">历史记录</text>
+            </view>
+            <view class="cell-right">
+                <text class="cell-right-text">查看历史</text>
+            </view>
+        </view>
+
 
         <!-- 退出登录 -->
         <button class="logout-btn" bindtap="toDetail">退出登录</button>

@@ -1,0 +1,33 @@
+.history-body {
+  padding: 40rpx;
+  background-color: #f2f2f7;
+  min-height: 100vh;
+}
+
+.history-title {
+  font-size: 40rpx;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 40rpx;
+  color: #333;
+}
+
+.history-list {
+  padding: 20rpx;
+}
+
+.history-item {
+  background-color: #fff;
+  padding: 30rpx;
+  margin-bottom: 20rpx;
+  border-radius: 16rpx;
+  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.08);
+  font-size: 30rpx;
+  color: #555;
+}
+
+.no-history {
+  text-align: center;
+  font-size: 34rpx;
+  color: #aaa;
+}

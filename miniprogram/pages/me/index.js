@@ -198,5 +198,11 @@ Page({
       wx.navigateTo({
           url: '../group/index'
       });
+  },
+  // 跳转到历史记录页面
+  navigateToHistory() {
+    wx.navigateTo({
+        url: '../history/index'
+    });
   }
 });

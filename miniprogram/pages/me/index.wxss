@@ -49,14 +49,12 @@ body {
 
 /* Logged-in Information Display */
 .info {
-  background: linear-gradient(145deg, #6f86d6, #48c6ef);
+  background: linear-gradient(145deg, #eea667, #FFDAB9);
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   padding: 60rpx 0;
-  border-bottom-left-radius: 20px;
-  border-bottom-right-radius: 20px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
   max-width: 100%; /* Prevent overflow */
 }
@@ -139,3 +137,4 @@ body {
 .logout-btn:hover {
   background-color: #c53027;
 }
+

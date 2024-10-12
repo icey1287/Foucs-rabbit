@@ -1,0 +1,17 @@
+<view class="history-body">
+    <view class="history-title">历史记录</view>
+
+    <!-- 历史记录列表 -->
+    <view class="history-list">
+        <block wx:for="{{ historyRecords }}" wx:key="*this">
+            <view class="history-item">
+                <text>{{ item.date }} - 专注时长: {{ item.focusTime }} 分钟</text>
+            </view>
+        </block>
+
+        <!-- 如果没有记录显示提示 -->
+        <view wx:if="{{ historyRecords.length === 0 }}" class="no-history">
+            <text>暂无历史记录</text>
+        </view>
+    </view>
+</view>
