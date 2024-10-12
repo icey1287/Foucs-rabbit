@@ -9,8 +9,7 @@ Page({
     avatarUrl: '', 
     nickName: '',  
     sumFocusTime: 0,  
-    gold: 0,
-    group: '',     
+    gold: 0, 
     creationDate: '', 
     cellList: [
         {
@@ -122,7 +121,6 @@ updateNickNameInDB(nickName) {
                         nickName: '',
                         sumFocusTime: 0,
                         gold:0,
-                        group: '',
                         creationDate: ''
                     });
                 }
@@ -143,7 +141,6 @@ updateNickNameInDB(nickName) {
             const userData = res.data[0];
             this.setData({
                 sumFocusTime: userData.sumFocusTime || 0,
-                group: userData.group || '未分组',
                 creationDate: userData.creationDate || '未知',
                 gold: userData.gold || 0,
                 avatarUrl: userData.avatarUrl || '/images/avatar_default.png', // 如果没有头像，显示默认头像
@@ -159,7 +156,6 @@ updateNickNameInDB(nickName) {
                     openId: openId,
                     sumFocusTime: 0,
                     gold: 0,
-                    group: '未分组',
                     creationDate: creationDate,
                     avatarUrl: '/images/avatar_default.png', // 默认头像
                     nickName: '点我修改昵称' // 设置默认昵称
@@ -169,7 +165,6 @@ updateNickNameInDB(nickName) {
                 this.setData({
                     sumFocusTime: 0,
                     gold: 0,
-                    group: '未分组',
                     creationDate: creationDate,
                     avatarUrl: '/images/avatar_default.png',
                     nickName: '点我修改昵称' // 设置默认昵称
@@ -230,12 +225,6 @@ updateNickNameInDB(nickName) {
       });
   },
 
-  // 跳转到 group 页面
-  navigateToGroup() {
-      wx.navigateTo({
-          url: '../group/index'
-      });
-  },
   // 跳转到历史记录页面
   navigateToHistory() {
     wx.navigateTo({

@@ -27,15 +27,6 @@
             <!-- <icon type="right-arrow" /> -->
         </view>
 
-        <!-- 小组 -->
-        <view class="cell" bindtap="navigateToGroup">
-            <view class="cell-left">
-                <text class="cell-left-text">小组</text>
-            </view>
-            <view class="cell-right">
-                <text class="cell-right-text">{{ group || '暂无小组' }}</text>
-            </view>
-        </view>
 
         <!-- 创建账号日期 -->
         <view class="cell">
