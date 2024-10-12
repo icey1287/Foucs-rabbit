@@ -1,3 +1,4 @@
+
 const DoNotCallCloudFunc = false;
 const fs = wx.getFileSystemManager()
 let musicPlayer = null;
@@ -51,8 +52,10 @@ Page({
     backgroundImage: null,
     defaultbg:"./image/default.png",
 
+
     musicName: ["英语", "英语2"],
     musicPath: ["/audios/Aria.mp3", "/audios/Guy.mp3"],
+
 
     musicIndex: 0,
 
