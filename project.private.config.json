@@ -4,5 +4,5 @@
     "compileHotReLoad": true,
     "bigPackageSizeSupport": true
   },
-  "libVersion": "2.15.0"
+  "libVersion": "3.6.0"
 }

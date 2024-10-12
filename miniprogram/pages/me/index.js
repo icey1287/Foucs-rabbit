@@ -4,25 +4,64 @@ Page({
    * 页面的初始数据
    */
   data: {
-      login: false,  // 是否登录
-      openId: '',
-      avatarUrl: '', // 头像
-      nickName: '',  // 昵称
-      sumFocusTime: 0,  // 累计专注时长
-      gold:0,
-      group: '',     // 小组
-      creationDate: '', // 创建账号日期
-      cellList: [
-          {
-              url: '../../images/quit.png',
-              text: '退出登录'
-          }
-      ]
-  },
+    login: false,  
+    openId: '',
+    avatarUrl: '', 
+    nickName: '',  
+    sumFocusTime: 0,  
+    gold: 0,
+    group: '',     
+    creationDate: '', 
+    cellList: [
+        {
+            url: '../../images/quit.png',
+            text: '退出登录'
+        }
+    ],
+    isEditingNickName: false // 是否在编辑昵称状态
+},
+
+// 点击输入框时的事件
+onNickNameFocus(e) {
+    this.setData({
+        isEditingNickName: true
+    });
+},
+
+// 当输入框失焦时的事件
+onNickNameBlur(e) {
+    const newNickName = e.detail.value.trim() || '点我修改昵称'; // 获取输入的值，如果为空则设置默认值
+    this.setData({
+        nickName: newNickName,
+        isEditingNickName: false
+    });
+
+    // 更新数据库中的昵称
+    this.updateNickNameInDB(newNickName);
+},
+
+// 更新昵称到云数据库
+updateNickNameInDB(nickName) {
+    const openId = wx.getStorageSync('openId');
+    const db = wx.cloud.database();
+
+    db.collection('users').where({
+        _openid: openId
+    }).update({
+        data: {
+            nickName: nickName
+        }
+    }).then(res => {
+        console.log('昵称更新成功');
+    }).catch(err => {
+        console.error('昵称更新失败：', err);
+    });
+},
+
 
   // 登录函数
   toLogin() {
-      wx.getUserProfile({
+    wx.getUserProfile({
         desc: '获取用户信息',
         success: (res) => {
             console.log(res);
@@ -30,40 +69,39 @@ Page({
             const userInfo = {
                 avatarUrl,
                 nickName
-            }
+            };
             wx.setStorageSync('userInfo', userInfo);  // 将用户信息存储
             wx.setStorageSync('login', true);  // 设置登录状态
 
             // 更新数据
             this.setData({
                 login: true,
-                avatarUrl,
-                nickName
             });
 
             // 获取 openId 并存储到 data
-            console.log("CCCCC")
             wx.cloud.callFunction({
-              name: 'getopenid', // 云函数名称
-              success: res => {
-                  const openId = res.result.userInfo.openId;
-                  wx.setStorageSync('openId', openId);  // 保存 openId 到本地
-                  this.setData({
-                      openId:res.result.userInfo.openId
-                  });
-                  console.log("CCCCC",res)
-                  // 加载用户其他信息
-                  this.loadUserData();
-                  //把openid传到全局变量
-                  getApp().globalData.openId = openId;
-              },
-              fail: err => {
-                  console.error('获取 openId 失败：', err);
-              }
-          });
+                name: 'getopenid', // 云函数名称
+                success: res => {
+                    const openId = res.result.userInfo.openId;
+                    wx.setStorageSync('openId', openId);  // 保存 openId 到本地
+                    this.setData({
+                        openId: res.result.userInfo.openId
+                    });
+                    
+                    // 加载用户的其他信息（包括昵称）
+                    this.loadUserData();
+
+                    // 把 openId 传到全局变量
+                    getApp().globalData.openId = openId;
+                },
+                fail: err => {
+                    console.error('获取 openId 失败：', err);
+                }
+            });
         }
-      });
-  },
+    });
+},
+
 
   // 退出登录函数
   toDetail(e) {
@@ -95,86 +133,85 @@ Page({
 
   // 从云数据库加载用户信息（专注时长、小组、创建账号日期）
   loadUserData() {
-      const openId = wx.getStorageSync('openId');  // 
+    const openId = wx.getStorageSync('openId');
+    const db = wx.cloud.database();
 
-      const db = wx.cloud.database();
+    db.collection('users').where({
+        _openid: openId
+    }).get().then(res => {
+        if (res.data.length > 0) {
+            const userData = res.data[0];
+            this.setData({
+                sumFocusTime: userData.sumFocusTime || 0,
+                group: userData.group || '未分组',
+                creationDate: userData.creationDate || '未知',
+                gold: userData.gold || 0,
+                avatarUrl: userData.avatarUrl || '/images/avatar_default.png', // 如果没有头像，显示默认头像
+                nickName: userData.nickName || '点我修改昵称' // 如果没有昵称，显示默认昵称
+            });
+        } else {
+            const date = new Date();
+            const creationDate = date.toLocaleDateString();
 
-// 先查询数据库
-        db.collection('users').where({
-            _openid: openId
-        }).get().then(res => {
-            // 如果查询结果中有数据
-            if (res.data.length > 0) {
-                const userData = res.data[0];
-                // 将用户数据设置到页面上
+            // 如果没有找到用户信息，则创建新的用户数据
+            db.collection('users').add({
+                data: {
+                    openId: openId,
+                    sumFocusTime: 0,
+                    gold: 0,
+                    group: '未分组',
+                    creationDate: creationDate,
+                    avatarUrl: '/images/avatar_default.png', // 默认头像
+                    nickName: '点我修改昵称' // 设置默认昵称
+                }
+            }).then(res => {
+                console.log('创建用户数据成功');
                 this.setData({
-                    sumFocusTime: userData.sumFocusTime || 0,
-                    group: userData.group || '未分组',
-                    creationDate: userData.creationDate || '未知',
-                    gold:userData.gold || 0,
+                    sumFocusTime: 0,
+                    gold: 0,
+                    group: '未分组',
+                    creationDate: creationDate,
+                    avatarUrl: '/images/avatar_default.png',
+                    nickName: '点我修改昵称' // 设置默认昵称
                 });
-            } else {
-                // 如果没有对应的用户数据，则创建新用户数据
-                const date = new Date();
-                const creationDate = date.toLocaleDateString(); // 将日期格式化为年月日
-                
-                db.collection('users').add({
-                    data: {
-                        openId: openId,
-                        sumFocusTime: 0,
-                        gold:0,
-                        group: '未分组',
-                        creationDate: creationDate // 保存格式化后的日期
-                    }
-                }).then(res => {
-                    console.log('创建用户数据成功：', res);
-                    // 创建成功后，将初始化的数据设置到页面上
-                    this.setData({
-                        sumFocusTime: 0,
-                        gold:0,
-                        group: '未分组',
-                        creationDate: creationDate // 设置格式化后的日期
-                    });
-                }).catch(err => {
-                    console.error('创建用户数据失败：', err);
-                });
-            }
-        }).catch(err => {
-            console.error('查询用户数据失败：', err);
-        });
+            }).catch(err => {
+                console.error('创建用户数据失败：', err);
+            });
+        }
+    }).catch(err => {
+        console.error('查询用户数据失败：', err);
+    });
+},
 
-  },
+
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad(options) {
-      const login = wx.getStorageSync('login');
-      const userInfo = wx.getStorageSync('userInfo');
-      const openId = wx.getStorageSync('openId');
-      if (userInfo) {
-          const { avatarUrl, nickName } = userInfo;
-          this.setData({
-              avatarUrl,
-              nickName
-          });
-      }
+    const login = wx.getStorageSync('login');
+    const userInfo = wx.getStorageSync('userInfo');
+    const openId = wx.getStorageSync('openId');
+    
+    if (userInfo) {
+        const { avatarUrl, nickName } = userInfo;
+        this.setData({
+            avatarUrl: avatarUrl || '/images/avatar_default.png', // 如果没有头像，显示默认头像
+            nickName
+        });
+    }
 
-      // 检查登录状态
-      this.setData({
+    this.setData({
         login: !!login,
         openId: openId || ''
     });
 
-    // 如果已登录并且有 openId，加载用户数据
     if (login && openId) {
         this.loadUserData();
         getApp().globalData.openId = openId;
     }
-    console.log("AAAAAAAAAA")
-    console.log(this.data.openId)
-    getApp().globalData.openId=this.data.openId
-  },
+},
+
 
   /**
    * 生命周期函数--监听页面显示
@@ -204,5 +241,41 @@ Page({
     wx.navigateTo({
         url: '../history/index'
     });
-  }
+  },
+  onChooseAvatar(e) {
+    const { avatarUrl } = e.detail;
+    const openId = wx.getStorageSync('openId');
+    
+    // 将头像上传到云存储
+    wx.cloud.uploadFile({
+        cloudPath: `avatars/${openId}-${Date.now()}.png`, // 云存储路径
+        filePath: avatarUrl, // 本地文件路径
+        success: res => {
+            const fileID = res.fileID; // 云文件ID
+
+            // 更新页面的头像显示
+            this.setData({
+                avatarUrl: fileID
+            });
+
+            // 将头像URL保存到数据库
+            const db = wx.cloud.database();
+            db.collection('users').where({
+                _openid: openId
+            }).update({
+                data: {
+                    avatarUrl: fileID
+                }
+            }).then(res => {
+                console.log('头像更新成功');
+            }).catch(err => {
+                console.error('头像更新失败：', err);
+            });
+        },
+        fail: err => {
+            console.error('头像上传失败：', err);
+        }
+    });
+}
+
 });

@@ -2,7 +2,7 @@
     <!-- 未登录时 -->
     <view class="unlogin-body" wx:if="{{ !login }}">
         <view class="unlogin">
-            <image class="unlogin-image" src="/images/avatar.png"></image>
+            <image class="unlogin-image" src="/images/avatar_default.png"></image>
             <button class="unlogin-btn" open-type="getUserInfo" bindtap="toLogin">点我一键登录</button>
         </view>
     </view>
@@ -10,8 +10,10 @@
     <!-- 已登录时 -->
     <view class="login" wx:else>
         <view class="info">
-            <image class="avatarUrl" src="{{ avatarUrl }}"></image>
-            <text class="nickName">{{ nickName }}</text>
+              <button class="avatar-wrapper"  open-type="chooseAvatar" bind:chooseavatar="onChooseAvatar">
+                <image class="avatarUrl" src="{{avatarUrl}}"></image>
+              </button> 
+              <input class="nickName" value="{{ nickName || '点我修改昵称' }}" bindfocus="onNickNameFocus" bindblur="onNickNameBlur" />
         </view>
 
         <!-- 累计专注时长 -->
