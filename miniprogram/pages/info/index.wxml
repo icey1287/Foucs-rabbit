@@ -1,4 +1,5 @@
-<view class="container">
+<view wx:if="{{isLogin}}">
+  <view class="container">
   <view class="section">
     <view class="header">
       累计专注
@@ -116,4 +117,5 @@
   <view class="util_center">年：{{_Year}}</view>
   </view>  
 
+  </view>
 </view>

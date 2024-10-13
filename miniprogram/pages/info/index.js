@@ -1,6 +1,8 @@
 //引入echarts库
 import * as echarts from '../../ec-canvas/echarts';
 
+const app = getApp();  //引入小程序实例，以获取全局变量
+
 // 初始化周学习时间统计折线图
 function initWeekChart(canvas, width, height, dpr, weekStudyTime) {
   const chart = echarts.init(canvas, null, {
@@ -228,6 +230,7 @@ Page({
     monthChart: {
       lazyLoad: true       // 设置 lazyLoad 为 true
     },                     // 用于绑定周折线图的配置
+    isLogin: true          //控制页面加载，若用户未登录不加载页面
   },
 
   //前一天
@@ -465,47 +468,69 @@ _getOpenIdAndQueryMonth: function(year) {
   });
 },
 
-//查询某一天的学习记录
+// 查询某一天的学习记录，支持分页获取所有数据
 queryStudyByDate: function(openId, targetDate) {
   const db = wx.cloud.database();
+  let totalFocusTimeInSeconds = 0; // 总学习时长
+  let studyCount = 0; // 学习次数
+  let limit = 20; // 每次查询的记录数
+  let skip = 0; // 查询的偏移量
 
   // 获取目标日期的开始和结束时间戳
   const startOfDay = new Date(targetDate).setHours(0, 0, 0, 0); // 一天的开始时间
   const endOfDay = new Date(targetDate).setHours(23, 59, 59, 999); // 一天的结束时间
 
-  db.collection('focus').where({
-    openId: openId,
-    date_stamp: db.command.gte(startOfDay).and(db.command.lte(endOfDay)) // 时间范围查询
-  }).get({
-    success: res => {
-      let totalFocusTimeInSeconds = 0;
-      let studyCount = res.data.length; // 学习次数
+  // 定义一个递归函数来分页获取数据
+  const fetchData = () => {
+    db.collection('focus').where({
+      openId: openId,
+      date_stamp: db.command.gte(startOfDay).and(db.command.lte(endOfDay)) // 时间范围查询
+    }).limit(limit).skip(skip).get({
+      success: res => {
+        if (res.data.length > 0) {
+          // 累加学习时间
+          res.data.forEach(record => {
+            totalFocusTimeInSeconds += record.focusTime; // 默认数据库中 focusTime 单位为分钟
+          });
 
-      // 累加学习时间
-      res.data.forEach(record => {
-        totalFocusTimeInSeconds += record.focusTime; //默认数据库中focusTime单位为分钟
-      });
+          studyCount += res.data.length; // 累加学习次数
+          skip += limit; // 更新偏移量以获取下一批数据
 
-      // 设置查询结果到页面数据
-      this.setData({
-        focusTime_day: totalFocusTimeInSeconds,  
-        studyCount_day: studyCount               
-      });
-    },
+          // 继续递归调用以获取更多数据
+          fetchData();
+        } else {
+          // 当数据返回为空时，表示查询完成
+          console.log('Total Focus Time (Seconds):', totalFocusTimeInSeconds);
+          console.log('Total Study Count:', studyCount);
 
-    fail: err => {
-      wx.showToast({
-        title: '查询失败',
-        icon: 'none'
-      });
-      console.error('查询失败:', err);
-    }
-  });
+          // 设置查询结果到页面数据
+          this.setData({
+            focusTime_day: totalFocusTimeInSeconds,  // 当天学习总时长
+            studyCount_day: studyCount               // 当天学习次数
+          });
+        }
+      },
+      fail: err => {
+        wx.showToast({
+          title: '查询失败',
+          icon: 'none'
+        });
+        console.error('查询失败:', err);
+      }
+    });
+  };
+
+  // 开始首次数据查询
+  fetchData();
 },
 
-// 查询某一个月的学习记录
+// 查询某一个月的学习记录，支持分页获取所有数据
 queryStudyByMonth: function(openId, targetMonth) {
   const db = wx.cloud.database();
+  let totalFocusTimeInSeconds = 0; // 总学习时长
+  let studyCount = 0; // 学习次数
+  let limit = 20; // 每次查询的记录数
+  let skip = 0; // 查询的偏移量
 
   // 将 targetMonth 转换为对应的开始日期和结束日期
   const [year, month] = targetMonth.split('-'); // "YYYY-MM"
@@ -514,226 +539,336 @@ queryStudyByMonth: function(openId, targetMonth) {
   const startOfMonth = new Date(year, month - 1, 1).getTime(); // 当月第一天的时间戳
   const endOfMonth = new Date(year, month, 1).getTime() - 1; // 下个月第一天的前一毫秒
 
-  db.collection('focus').where({
-    openId: openId,
-    date_stamp: db.command.gte(startOfMonth).and(db.command.lte(endOfMonth)) // 时间戳范围查询
-  }).get({
-    success: res => {
-      let totalFocusTimeInSeconds = 0;
-      let studyCount = res.data.length; // 学习次数
+  // 定义一个递归函数来分页获取数据
+  const fetchData = () => {
+    db.collection('focus').where({
+      openId: openId,
+      date_stamp: db.command.gte(startOfMonth).and(db.command.lte(endOfMonth)) // 时间戳范围查询
+    }).limit(limit).skip(skip).get({
+      success: res => {
+        if (res.data.length > 0) {
+          // 累加学习时间
+          res.data.forEach(record => {
+            totalFocusTimeInSeconds += record.focusTime; // 累加学习时长
+          });
 
-      // 累加学习时间
-      res.data.forEach(record => {
-        totalFocusTimeInSeconds += record.focusTime; //默认数据库中focusTime单位为分钟
-      });
+          studyCount += res.data.length; // 累加学习次数
+          skip += limit; // 更新偏移量以获取下一批数据
 
-      // 设置查询结果到页面数据
-      this.setData({
-        focusTime_month: totalFocusTimeInSeconds,
-        studyCount_month: studyCount
-      });
-    },
+          // 继续递归调用以获取更多数据
+          fetchData();
+        } else {
+          // 当数据返回为空时，表示查询完成
+          console.log('Total Focus Time (Seconds):', totalFocusTimeInSeconds);
+          console.log('Total Study Count:', studyCount);
 
-    fail: err => {
-      wx.showToast({
-        title: '查询失败',
-        icon: 'none'
-      });
-      console.error('查询失败:', err);
-    }
-  });
+          // 设置查询结果到页面数据
+          this.setData({
+            focusTime_month: totalFocusTimeInSeconds,  // 月学习总时长
+            studyCount_month: studyCount               // 月学习次数
+          });
+        }
+      },
+      fail: err => {
+        wx.showToast({
+          title: '查询失败',
+          icon: 'none'
+        });
+        console.error('查询失败:', err);
+      }
+    });
+  };
+
+  // 开始首次数据查询
+  fetchData();
 },
 
-// 查询某一年的学习记录
+// 查询某一年的学习记录，支持分页获取所有数据
 queryStudyByYear: function(openId, targetYear) {
   const db = wx.cloud.database();
+  let totalFocusTimeInSeconds = 0; // 总学习时长
+  let studyCount = 0; // 学习次数
+  let limit = 20; // 每次查询的记录数
+  let skip = 0; // 查询的偏移量
 
   // 获取该年第一天和最后一天的时间戳
   const startOfYear = new Date(targetYear, 0, 1).getTime(); // 当年第一天的时间戳
   const endOfYear = new Date(targetYear, 11, 31, 23, 59, 59, 999).getTime(); // 当年最后一天的时间戳
 
-  db.collection('focus').where({
-    openId: openId,
-    date_stamp: db.command.gte(startOfYear).and(db.command.lte(endOfYear)) // 时间戳范围查询
-  }).get({
-    success: res => {
-      let totalFocusTimeInSeconds = 0;
-      let studyCount = res.data.length; // 学习次数
+  // 定义一个递归函数来分页获取数据
+  const fetchData = () => {
+    db.collection('focus').where({
+      openId: openId,
+      date_stamp: db.command.gte(startOfYear).and(db.command.lte(endOfYear)) // 时间戳范围查询
+    }).limit(limit).skip(skip).get({
+      success: res => {
+        if (res.data.length > 0) {
+          // 累加学习时间
+          res.data.forEach(record => {
+            totalFocusTimeInSeconds += record.focusTime; // 累加学习时长
+          });
 
-      // 累加学习时间
-      res.data.forEach(record => {
-        totalFocusTimeInSeconds += record.focusTime; //默认数据库中focusTime单位为分钟
-      });
+          studyCount += res.data.length; // 累加学习次数
+          skip += limit; // 更新偏移量以获取下一批数据
 
-      // 设置查询结果到页面数据
-      this.setData({
-        focusTime_year: totalFocusTimeInSeconds,
-        studyCount_year: studyCount
-      });
-    },
+          // 继续递归调用以获取更多数据
+          fetchData();
+        } else {
+          // 当数据返回为空时，表示查询完成
+          console.log('Total Focus Time (Seconds):', totalFocusTimeInSeconds);
+          console.log('Total Study Count:', studyCount);
 
-    fail: err => {
-      wx.showToast({
-        title: '查询失败',
-        icon: 'none'
-      });
-      console.error('查询失败:', err);
-    }
-  });
+          // 设置查询结果到页面数据
+          this.setData({
+            focusTime_year: totalFocusTimeInSeconds,  // 总学习时长
+            studyCount_year: studyCount               // 总学习次数
+          });
+        }
+      },
+      fail: err => {
+        wx.showToast({
+          title: '查询失败',
+          icon: 'none'
+        });
+        console.error('查询失败:', err);
+      }
+    });
+  };
+
+  // 开始首次数据查询
+  fetchData();
 },
 
-//查询所有的学习记录
+// 查询所有的学习记录，支持分页获取所有数据
 queryAllStudy: function(openId) {
   const db = wx.cloud.database();
+  let totalFocusTimeInSeconds = 0; // 总学习时间
+  let studyCount = 0; // 学习次数
+  let studyDays = new Set(); // 用于存储学习的日期
+  let limit = 20; // 每次查询的记录数
+  let skip = 0; // 查询的偏移量
 
-  db.collection('focus').where({
-    openId: openId
-  }).get({
-    success: res => {
-      let totalFocusTimeInSeconds = 0;
-      let studyCount = res.data.length; // 学习次数
-      let studyDays = new Set(); // 用于存储学习的日期
+  // 定义一个递归函数，用于分页获取数据
+  const fetchData = () => {
+    db.collection('focus').where({
+      openId: openId
+    }).limit(limit).skip(skip).get({
+      success: res => {
+        if (res.data.length > 0) {
+          // 累加学习时间并记录学习日期
+          res.data.forEach(record => {
+            totalFocusTimeInSeconds += record.focusTime; // 累加学习时长
+            const date = new Date(record.date_stamp).toISOString().split('T')[0]; // 提取日期部分
+            studyDays.add(date); // 添加到日期集合（去重）
+          });
 
-      // 累加学习时间并记录学习日期
-      res.data.forEach(record => {
-        totalFocusTimeInSeconds += record.focusTime; //默认数据库中focusTime单位为分钟
-        const date = new Date(record.date_stamp).toISOString().split('T')[0]; // 使用时间戳获取日期部分
-        studyDays.add(date); // 将日期加入集合
-      });
+          studyCount += res.data.length; // 累加学习次数
+          skip += limit; // 更新偏移量以获取下一批数据
 
-      const uniqueStudyDays = studyDays.size; // 不同学习天数
-      const averageFocusTime = studyCount > 0 ? parseFloat((totalFocusTimeInSeconds / uniqueStudyDays).toFixed(1)) : 0;  //日均时长，保留一位有效数字
+          // 继续递归调用以获取更多数据
+          fetchData();
+        } else {
+          // 当数据返回为空时，表示查询完成
+          const uniqueStudyDays = studyDays.size; // 不同学习天数
+          const averageFocusTime = studyCount > 0 ? parseFloat((totalFocusTimeInSeconds / uniqueStudyDays).toFixed(1)) : 0; // 计算日均时长
 
+          // 设置查询结果到页面数据
+          this.setData({
+            totalFocusTime: totalFocusTimeInSeconds,  // 总学习时长
+            totalStudyCount: studyCount,              // 总学习次数
+            averageFocusTime: averageFocusTime        // 日均学习时长
+          });
 
-      // 设置查询结果到页面数据
-      this.setData({
-        totalFocusTime: totalFocusTimeInSeconds,  
-        totalStudyCount: studyCount,               
-        averageFocusTime: averageFocusTime         
-      });
-    },
+          console.log('Total Focus Time:', totalFocusTimeInSeconds);
+          console.log('Total Study Count:', studyCount);
+          console.log('Unique Study Days:', uniqueStudyDays);
+          console.log('Average Focus Time per Day:', averageFocusTime);
+        }
+      },
+      fail: err => {
+        wx.showToast({
+          title: '查询失败',
+          icon: 'none'
+        });
+        console.error('查询失败:', err);
+      }
+    });
+  };
 
-    fail: err => {
-      wx.showToast({
-        title: '查询失败',
-        icon: 'none'
-      });
-      console.error('查询失败:', err);
-    }
-  });
+  // 开始首次数据查询
+  fetchData();
 },
 
+// 查询某一周的学习记录，支持分页查询
 queryStudyByWeek: function(openId, startDate) {
   const db = wx.cloud.database();
-  let weekStudyTime = []; // 保存一周的学习时长
-  let promises = []; // 存储所有查询的 Promise
+  let weekStudyTime = new Array(7).fill(0); // 保存一周的学习时长，初始化为 0
+  let limit = 20; // 每次查询的记录数
 
-  for (let i = 0; i < 7; i++) {
+  // 定义一个递归函数进行分页查询
+  const fetchData = (dayIndex, skip = 0) => {
     let targetDate = new Date(startDate);
-    targetDate.setDate(targetDate.getDate() + i);
+    targetDate.setDate(targetDate.getDate() + dayIndex);
     const startOfDay = new Date(targetDate).setHours(0, 0, 0, 0);
     const endOfDay = new Date(targetDate).setHours(23, 59, 59, 999);
 
-    // 将每个查询作为 Promise 存储
-    promises.push(new Promise((resolve, reject) => {
-      db.collection('focus').where({
-        openId: openId,
-        date_stamp: db.command.gte(startOfDay).and(db.command.lte(endOfDay))
-      }).get({
-        success: res => {
-          let totalFocusTimeInSeconds = 0;
+    db.collection('focus').where({
+      openId: openId,
+      date_stamp: db.command.gte(startOfDay).and(db.command.lte(endOfDay))
+    }).limit(limit).skip(skip).get({
+      success: res => {
+        let totalFocusTimeInSeconds = 0;
 
-          // 累加学习时间
-          res.data.forEach(record => {
-            totalFocusTimeInSeconds += record.focusTime; // 默认数据库中focusTime单位为分钟
-          });
-          weekStudyTime.push(totalFocusTimeInSeconds);
-          resolve();
-        },
-        fail: err => {
-          wx.showToast({
-            title: '查询失败',
-            icon: 'none'
-          });
-          console.error('查询失败:', err);
-          reject(err);
+        // 累加学习时间
+        res.data.forEach(record => {
+          totalFocusTimeInSeconds += record.focusTime; // 默认数据库中 focusTime 单位为分钟
+        });
+
+        weekStudyTime[dayIndex] += totalFocusTimeInSeconds; // 确保对应日期的学习时间累加
+
+        if (res.data.length === limit) {
+          // 如果返回的数据达到限制数量，则可能还有更多数据需要查询，继续分页查询
+          fetchData(dayIndex, skip + limit);
+        } else {
+          // 如果没有更多数据，检查是否所有天数都处理完
+          if (dayIndex < 6) {
+            fetchData(dayIndex + 1); // 继续查询下一天
+          } else {
+            // 所有天数查询完毕，更新数据和初始化图表
+            this.setData({
+              weekStudyTime: weekStudyTime,
+            });
+            this.initWeek(); // 初始化图表
+          }
         }
-      });
-    }));
-  }
+      },
+      fail: err => {
+        wx.showToast({
+          title: '查询失败',
+          icon: 'none'
+        });
+        console.error('查询失败:', err);
+      }
+    });
+  };
 
-  // 等待所有 Promise 完成后再初始化图表，数据库查询为异步操作，非同步进行，须强制设定顺序
-  Promise.all(promises).then(() => {
-    this.setData({
-      weekStudyTime: weekStudyTime ,
-  });
-  this.initWeek();
-  }).catch(err => {
-    console.error('错误:', err);
-  });
+  // 开始首次查询从第一天开始
+  fetchData(0);
 },
 
-// 查询某年每月的学习时间
+//查询某月的学习记录，支持分页查询
 _queryStudyByMonth: function(openId, year) {
   const db = wx.cloud.database();
   let monthStudyTime = new Array(12).fill(0); // 保存每月的学习时长，初始化为 0
   let promises = []; // 存储所有查询的 Promise
 
-  for (let month = 0; month < 12; month++) {
+  // 分页查询的递归函数
+  const queryDataByMonth = (month, skip = 0, batchSize = 20) => {
     // 每个月的开始和结束时间
     const startOfMonth = new Date(year, month, 1).getTime();
     const endOfMonth = new Date(year, month + 1, 0, 23, 59, 59, 999).getTime(); // 这个月最后一天
 
-    // 将每个查询作为 Promise 存储
-    promises.push(new Promise((resolve, reject) => {
-      db.collection('focus').where({
-        openId: openId,
-        date_stamp: db.command.gte(startOfMonth).and(db.command.lte(endOfMonth))
-      }).get({
-        success: res => {
-          let totalFocusTimeInSeconds = 0;
+    return new Promise((resolve, reject) => {
+      db.collection('focus')
+        .where({
+          openId: openId,
+          date_stamp: db.command.gte(startOfMonth).and(db.command.lte(endOfMonth)) // 时间范围查询
+        })
+        .skip(skip) // 跳过已经查询的记录
+        .limit(batchSize) // 每次最多查询 20 条
+        .get({
+          success: res => {
+            let totalFocusTimeInSeconds = 0;
 
-          // 累加学习时间
-          res.data.forEach(record => {
-            totalFocusTimeInSeconds += record.focusTime; // 默认数据库中focusTime单位为分钟
-          });
-          monthStudyTime[month] = totalFocusTimeInSeconds; // 将每月的学习时长存入数组
-          resolve();
-        },
-        fail: err => {
-          wx.showToast({
-            title: '查询失败',
-            icon: 'none'
-          });
-          console.error('查询失败:', err);
-          reject(err);
-        }
-      });
-    }));
+            // 累加学习时间
+            res.data.forEach(record => {
+              totalFocusTimeInSeconds += record.focusTime; // 默认数据库中focusTime单位为分钟
+            });
+
+            // 更新该月份的学习时长
+            monthStudyTime[month] += totalFocusTimeInSeconds;
+
+            // 如果查询结果的数量等于 batchSize，继续分页查询
+            if (res.data.length === batchSize) {
+              queryDataByMonth(month, skip + batchSize).then(resolve).catch(reject); // 递归分页查询
+            } else {
+              resolve(); // 数据已经全部查询完成，结束递归
+            }
+          },
+          fail: err => {
+            wx.showToast({
+              title: '查询失败',
+              icon: 'none'
+            });
+            console.error('查询失败:', err);
+            reject(err);
+          }
+        });
+    });
+  };
+
+  // 创建每个月的 Promise，并进行分页查询
+  for (let month = 0; month < 12; month++) {
+    promises.push(queryDataByMonth(month)); // 每个月进行查询
   }
 
-  // 等待所有 Promise 完成后再初始化图表，数据库查询为异步操作，非同步进行，须强制设定顺序
+  // 等待所有 Promise 完成后再初始化图表
   Promise.all(promises).then(() => {
     this.setData({
       monthStudyTime: monthStudyTime, // 更新每月学习时间数据
     });
-  
+    
     this.initMonth(); // 初始化月份图表
   }).catch(err => {
     console.error('错误:', err);
   });
 },
 
-// 页面加载
-onLoad: function() {
-  this.initializeDate(); // 初始化日期和数据
+// 判断用户是否登录
+judge: function() {
+  this.setData({ isLogin: false }); 
+  let openId = app.globalData.openId;
+  if (openId === undefined || openId === null) {
+    this.setData({ isLogin: false }); 
+    // 用户未登录，显示模态框并跳转到登录页面
+    wx.showModal({
+      title: '提示',
+      content: '请登录',
+      showCancel: false,
+      success: (res) => {
+        if (res.confirm) {
+          // 跳转到登录页面，这里使用 navigateTo 或者 redirectTo
+          wx.switchTab({
+            url: '../me/index',
+          })
+        }
+      }
+    });
+  }else{
+    console.log("用户已登录");
+    this.setData({ isLogin: true }); 
+    this.ecWeekComponent = this.selectComponent('#weekChart');
+    this.ecMonthComponent = this.selectComponent('#monthChart');
+    this.initializeDate();
+  }
 },
 
-//获取当前页面组件
-onReady: function () {
-  this.ecWeekComponent = this.selectComponent('#weekChart');
-  this.ecMonthComponent = this.selectComponent('#monthChart');
+// // 页面加载
+// onLoad: function() {
+//     this.initializeDate(); // 初始化日期和数据
+// },
+
+
+// 页面加载
+onShow: function() {
+  this.judge(); // 初始化日期和数据
 },
+
+// //获取当前页面组件
+// onReady: function () {
+//   this.ecWeekComponent = this.selectComponent('#weekChart');
+//   this.ecMonthComponent = this.selectComponent('#monthChart');
+// },
 
 //周学习时间折线图渲染
 initWeek: function () {
@@ -783,6 +918,14 @@ initMonth: function () {
 // 下拉刷新页面恢复到当前日期的数据
 onPullDownRefresh: function() {
   wx.stopPullDownRefresh(); // 停止下拉刷新
+},
+
+onShareAppMessage: function () {
+  return {
+    title: `我今天一共学习了 ${this.data.totalFocusTime} 分钟，快来一起学习吧！`,
+    path: "",
+    imageUrl: "/images/Sunday.png"  // 秩序之神：周日哥！
+  }
 },
 
 });
