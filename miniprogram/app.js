@@ -15,7 +15,21 @@ App({
       });
     }
 
-    this.globalData = {};
+    this.globalData = {
+      bgPicCloudPath: {
+        "bg_pic_1": { "url": "cloud://jgzt-6guvlk751444cb8d.6a67-jgzt-6guvlk751444cb8d-1329375150/image/default_background_new_1.jpg" },
+        "bg_pic_2": { "url": "cloud://jgzt-6guvlk751444cb8d.6a67-jgzt-6guvlk751444cb8d-1329375150/image/default_background_new_2.jpg" },
+        "bg_pic_3": { "url": "cloud://jgzt-6guvlk751444cb8d.6a67-jgzt-6guvlk751444cb8d-1329375150/image/default_background_new_3.jpg" },
+        "bg_pic_4": { "url": "cloud://jgzt-6guvlk751444cb8d.6a67-jgzt-6guvlk751444cb8d-1329375150/image/default_background_new_4.jpg" },
+        "bg_pic_5": { "url": "cloud://jgzt-6guvlk751444cb8d.6a67-jgzt-6guvlk751444cb8d-1329375150/image/default_background_new_5.jpg" },
+        "bg_pic_6": { "url": "cloud://jgzt-6guvlk751444cb8d.6a67-jgzt-6guvlk751444cb8d-1329375150/image/default_background_new_6.jpg" },
+        "bg_pic_7": { "url": "cloud://jgzt-6guvlk751444cb8d.6a67-jgzt-6guvlk751444cb8d-1329375150/image/default_background_new_7.jpg" },
+      },
+      bgMucCloudPath: {
+        "bg_music_1": { "url": "cloud://jgzt-6guvlk751444cb8d.6a67-jgzt-6guvlk751444cb8d-1329375150/audios/bonfire.mp3", "name": "燃火" },
+        "bg_music_2": { "url": "cloud://jgzt-6guvlk751444cb8d.6a67-jgzt-6guvlk751444cb8d-1329375150/audios/rain.mp3", "name": "雨声" },
+      }
+    };
     // const openId = wx.getStorageSync('openId');
     // this.globalData.openId=openId;
   }

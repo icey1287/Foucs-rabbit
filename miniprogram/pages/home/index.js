@@ -1,5 +1,8 @@
 // pages/home/index.js
 const app = getApp();
+const fs = wx.getFileSystemManager()
+const bgPicCloudPath = app.globalData.bgPicCloudPath;
+const bgMucCloudPath = app.globalData.bgMucCloudPath;
 Page({
   /****************************************************/
   getTab(e) {
@@ -8,7 +11,7 @@ Page({
     console.log("home:select:", select)
   },
   selectPet: function (e) {
-    this.data.selectPetIndex= Number(e.detail.value)
+    this.data.selectPetIndex = Number(e.detail.value)
   },
   startFocus() {
     let openid = app.globalData["openId"];
@@ -26,20 +29,68 @@ Page({
       });
     } else {
       let url = '../focusing/index' +
-          "?min=" + this.data.tabList_min[this.data.select] +
-          "&sec=" + this.data.tabList_sec[this.data.select] +
-          (
-            this.data.selectPetIndex ?
-              "&petName=" + this.data.allPetList[this.data.selectPetIndex] : ''
-          );
-          console.log("home:ralunch.url:",url);
+        "?min=" + this.data.tabList_min[this.data.select] +
+        "&sec=" + this.data.tabList_sec[this.data.select] +
+        (
+          this.data.selectPetIndex ?
+            "&petName=" + this.data.allPetList[this.data.selectPetIndex] : ''
+        );
+      console.log("home:ralunch.url:", url);
       wx.reLaunch({
-        url:url, 
+        url: url,
         fail: function () {
-          console.log("focus:", "跳转至主页失败")
+          console.log("home:", "跳转至focus失败")
         }
       })
     }
+  },
+  downloadRes() {
+    //Pic
+    Object.keys(bgPicCloudPath).forEach(key => {
+      // console.log(key,bgPicCloudPath[key].url);
+      let url = bgPicCloudPath[key].url;
+      this.downloadSingle(key, url);
+    });
+    Object.keys(bgMucCloudPath).forEach(key => {
+      // console.log(key,bgMucCloudPath[key].url);
+      let url = bgMucCloudPath[key].url;
+      this.downloadSingle(key, url);
+    })
+  },
+  //从缓存[key]获取路径,判断文件是否存在,不存在则下载,return bool
+  downloadSingle(key, url) {
+    let cache = wx.getStorageSync(key);
+    if (cache != null && cache != undefined) {
+      try {
+        fs.accessSync(cache);
+        console.log('home:读取旧的本地缓存文件:' + cache + '成功');
+        return;
+      } catch (e) {
+        console.log('home:读取旧的本地缓存文件:' + String(cache) + '失败,将重新下载.', String(e));
+      }
+    }
+    wx.cloud.downloadFile({
+      fileID: url,
+      success: function (res) {
+        if (res.statusCode === 200) {
+          let tempFilePath = res.tempFilePath;
+          fs.saveFile({
+            tempFilePath: tempFilePath,
+            success: function (res) {
+              let savedFilePath = res.savedFilePath;
+              wx.setStorageSync(key, savedFilePath);
+              console.log('home:保存文件:' + key + 'url:' + url + '到本地缓存' + savedFilePath + '成功');
+            },
+            fail: function (res) {
+              console.log('home:保存文件:' + key + 'url:' + url + '到本地缓存失败', res);
+            }
+          });
+        }
+      },
+      fail: function (res) {
+        console.log('home:下载文件:' + key + ' url:' + url + '失败', res);
+      }
+    });
   },
   /****************************************************/
   /**
@@ -57,6 +108,7 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad(options) {
+    this.downloadRes();
   },
 
   /**

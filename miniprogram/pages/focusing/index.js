@@ -1,14 +1,16 @@
-
 const DoNotCallCloudFunc = false;
+const app = getApp();
 const fs = wx.getFileSystemManager()
 let musicPlayer = null;
-
+const bgPicCloudPath = app.globalData.bgPicCloudPath;
+const bgMucCloudPath = app.globalData.bgMucCloudPath;
 function getRandomInt(min, max) {
   const seed = Date.now();
   const rng = Math.sin(seed);
-  return Math.floor(((rng+1)/2) * (max - min + 1)) + min;
+  return Math.floor(((rng + 1) / 2) * (max - min + 1)) + min;
 }
-const bgList= [
+
+const bgList = [
   "default_background_new_1.JPG",
   "default_background_new_2.JPG",
   "default_background_new_3.JPG",
@@ -18,27 +20,27 @@ const bgList= [
   "default_background_new_7.JPG",
 ];
 
-const quoteList=[
-    "学习新知识就像打怪升级，加油，你已经进步了一大步！",
-    "别担心遇到困难，我一直陪着你呢！",
-    "每一次专注学习，都是未来成功的垫脚石！",
-    "学习路上，你的小伙伴随时为你加油打气！",
-    "今天的任务很重要，但别忘了也要适时休息哦！",
-    "你在努力，我看在眼里，继续加油吧！",
-    "每个小进步，都会成为大成功的开始！",
-    "学习虽然辛苦，但成果一定会让你骄傲！",
-    "别怕犯错，错过才是最可怕的事情！",
-    "休息片刻，再继续前进，保持你的学习节奏！",
-    "只要你坚持，我就会一直陪着你，不离不弃！",
-    "没有什么能难倒你，只要你愿意努力！",
-    "每一天进步一点点，最终会有质的飞跃！",
-    "只要你专注，学习变得轻而易举！",
-    "放下杂念，享受学习的过程吧！",
-    "今天又是努力学习的一天，继续保持吧！",
-    "你越专注，学习越高效，我可是见证者哦！",
-    "学习的路可能有些枯燥，但你不是一个人哦！",
-    "每个学习的时刻，都会在未来的某一天给你回报！",
-    "你有无限潜力，只要不断努力，总有一天会爆发！"
+const quoteList = [
+  "学习新知识就像打怪升级，加油，你已经进步了一大步！",
+  "别担心遇到困难，我一直陪着你呢！",
+  "每一次专注学习，都是未来成功的垫脚石！",
+  "学习路上，你的小伙伴随时为你加油打气！",
+  "今天的任务很重要，但别忘了也要适时休息哦！",
+  "你在努力，我看在眼里，继续加油吧！",
+  "每个小进步，都会成为大成功的开始！",
+  "学习虽然辛苦，但成果一定会让你骄傲！",
+  "别怕犯错，错过才是最可怕的事情！",
+  "休息片刻，再继续前进，保持你的学习节奏！",
+  "只要你坚持，我就会一直陪着你，不离不弃！",
+  "没有什么能难倒你，只要你愿意努力！",
+  "每一天进步一点点，最终会有质的飞跃！",
+  "只要你专注，学习变得轻而易举！",
+  "放下杂念，享受学习的过程吧！",
+  "今天又是努力学习的一天，继续保持吧！",
+  "你越专注，学习越高效，我可是见证者哦！",
+  "学习的路可能有些枯燥，但你不是一个人哦！",
+  "每个学习的时刻，都会在未来的某一天给你回报！",
+  "你有无限潜力，只要不断努力，总有一天会爆发！"
 ];
 Page({
   data: {
@@ -50,20 +52,20 @@ Page({
     timer: null,
 
     backgroundImage: null,
-    defaultbg:"./image/default.png",
+    defaultbg: "./image/default.png",
 
 
-    musicName: ["英语", "英语2"],
-    musicPath: ["/audios/Aria.mp3", "/audios/Guy.mp3"],
+    musicName: [],
+    musicPath: [],
 
 
     musicIndex: 0,
 
     keepScreenOn: false,
     paused: false,
-    quote:null,
+    quote: null,
 
-    petName:null,
+    petName: null,
   },
   startTimer: function () {
     if (this.data.timer != null) {
@@ -71,43 +73,43 @@ Page({
       return
     }
     let totalSeconds = Number(this.data.init_min * 60) + Number(this.data.init_sec);
-      this.data.timer = setInterval(() => {
-        if (totalSeconds <= 0) {
-          clearInterval(this.data.timer);
-          this.stopMusic();
-          this.destroyMusic();
-          wx.showModal({
-            title: '提示',
-            content: '倒计时结束！获得金币*' + this.data.init_min,
-            showCancel: false,
-            success: (res) => {
-              if (!DoNotCallCloudFunc) {//TEST:测试用5sec <=> 5min
-                if (this.data.init_min == 0) {
-                  this.addFocusRecord(this.data.init_sec);
-                  this.updateUserTotalTime(this.data.init_sec)
-                } else {
-                  this.addFocusRecord(this.data.init_min);
-                  this.updateUserTotalTime(this.data.init_min)
-                }
+    this.data.timer = setInterval(() => {
+      if (totalSeconds <= 0) {
+        clearInterval(this.data.timer);
+        this.stopMusic();
+        this.destroyMusic();
+        wx.showModal({
+          title: '提示',
+          content: '倒计时结束！获得金币*' + this.data.init_min,
+          showCancel: false,
+          success: (res) => {
+            if (!DoNotCallCloudFunc) {//TEST:测试用5sec <=> 5min
+              if (this.data.init_min == 0) {
+                this.addFocusRecord(this.data.init_sec);
+                this.updateUserTotalTime(this.data.init_sec)
+              } else {
+                this.addFocusRecord(this.data.init_min);
+                this.updateUserTotalTime(this.data.init_min)
               }
-              this.goBack();
             }
-          });
-        } 
-        else if (!this.data.paused) {
-          totalSeconds--;
-          this.setData({
-            left_min: Math.floor(totalSeconds / 60).toString().padStart(2, '0'),
-            left_sec: (totalSeconds % 60).toString().padStart(2, '0')
-          });
-          this.drawClock(this.data.left_min, this.data.left_sec);
-        };
-        if(Number(this.data.left_sec)%30==0 || this.data.quote===null){
-          console.log("focus:left_min:",Number(this.data.left_sec))
-          let quote = quoteList[getRandomInt(0,quoteList.length-1)];
-           this.setData({quote:this.data.petName?this.data.petName+":"+quote:quote})
-        }
-      }, 1000);
+            this.goBack();
+          }
+        });
+      }
+      else if (!this.data.paused) {
+        totalSeconds--;
+        this.setData({
+          left_min: Math.floor(totalSeconds / 60).toString().padStart(2, '0'),
+          left_sec: (totalSeconds % 60).toString().padStart(2, '0')
+        });
+        this.drawClock(this.data.left_min, this.data.left_sec);
+      };
+      if (Number(this.data.left_sec) % 30 == 0 || this.data.quote === null) {
+        console.log("focus:left_min:", Number(this.data.left_sec))
+        let quote = quoteList[getRandomInt(0, quoteList.length - 1)];
+        this.setData({ quote: this.data.petName ? this.data.petName + ":" + quote : quote })
+      }
+    }, 1000);
   },
   drawClock: function (min, sec) {
     min = Number(min)
@@ -205,10 +207,10 @@ Page({
       }
     })
   },
-  destroyMusic:function(){
-    if(musicPlayer!=null&&musicPlayer!=undefined){
+  destroyMusic: function () {
+    if (musicPlayer != null && musicPlayer != undefined) {
       musicPlayer.destroy();
-      musicPlayer=null
+      musicPlayer = null
     }
   },
   restartMusic: function () {
@@ -323,13 +325,34 @@ Page({
 
   /***********************************************************************/
   onLoad: function (options) {
-    this.setData({backgroundImage:"./image/" + bgList[Date.now()%bgList.length]})
+    let musicname = [];
+    let musicpath = [];
+    Object.keys(bgMucCloudPath).forEach(key => {
+      let path = this.getFilePath(key);
+      if (path != null && path != undefined) {
+        musicname.push(bgMucCloudPath[key].name)
+        musicpath.push(this.getFilePath(key))
+      }
+    })
     this.setData({
-        left_min:options["min"],
-        init_min:Number(options["min"]),
-        left_sec:options["sec"],
-        init_sec:Number(options["sec"]),
-        petName:options["petName"]||null
+      musicName: musicname,
+      musicPath: musicpath
+    })
+    let validbgPicPath=[]
+    Object.keys(bgPicCloudPath).forEach(key => {
+      let path = this.getFilePath(key);
+      if (path != null && path != undefined) {
+        validbgPicPath.push(path)
+      }
+    })
+    this.setData({ backgroundImage:validbgPicPath[getRandomInt(0,validbgPicPath.length-1)]})
+    // this.setData({ backgroundImage: "./image/" + bgList[Date.now() % bgList.length] })
+    this.setData({
+      left_min: options["min"],
+      init_min: Number(options["min"]),
+      left_sec: options["sec"],
+      init_sec: Number(options["sec"]),
+      petName: options["petName"] || null
     })
     this.initMusic();
     this.startMusic();
@@ -342,7 +365,7 @@ Page({
   },
   onHide() {
     console.log("focus:Hide")
-    if (musicPlayer!=null&&musicPlayer!=undefined&&musicPlayer.paused == false) {
+    if (musicPlayer != null && musicPlayer != undefined && musicPlayer.paused == false) {
       musicPlayer.pause()
     }
   },
@@ -361,6 +384,18 @@ Page({
       console.log("focus:", "onShow but not paused?")
       this.startMusic()
     }
+  },
+  getFilePath(key) {
+    let cache = wx.getStorageSync(key);
+    if (cache != null && cache != undefined) {
+      try {
+        fs.accessSync(cache);
+        return cache;
+      } catch (e) {
+        console.log('focus:getFilePath:读取本地缓存文件:' + cache + '失败', e);
+      }
+    }
+    return null;
   }
 }
 );
