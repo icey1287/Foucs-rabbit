@@ -66,6 +66,7 @@ Page({
     quote: null,
 
     petName: null,
+    petImage:null,
   },
   startTimer: function () {
     if (this.data.timer != null) {

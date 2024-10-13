@@ -1,7 +1,12 @@
 <view class="container" style="background-image: url('{{backgroundImage||defaultbg}}');">
- <view class="quote-container">
-  <view wx:if="{{quote!==null}}" class="quote">{{quote}}</view>
-</view>
+  <view class="quote-container">
+    <view wx:if="{{quote!==null}}" class="quote-inner-container">
+      <view wx:if="{{petImage}}" class="quote-img-container">
+        <image class="quote-img" src="{{petImage}}"></image>
+      </view>
+      <text class="quote-text">{{quote}}</text>
+    </view>
+  </view>
   <view class="clock">
     <canvas class="ClockCanvas" type="2d" id="ClockCanvas"></canvas>
   </view>
