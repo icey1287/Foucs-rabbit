@@ -7,10 +7,15 @@
   <view class="quote-2-out">
     <text class="quote-2-inner">享受那份源自内心的宁静</text>
   </view>
-  <view class="tab_container">
-    <Tab tabList="{{ tabList }}" bindgettab="getTab" />
-  </view>
+  <Tab tabList="{{ tabList }}" class="tab" bindgettab="getTab" />
   <view class="focus-button-container">
-    <button bind:tap="startFocus" class="apple-button" style="font-size: {{40}}rpx;">开始专注</button>
+    <button bind:tap="startFocus" class="apple-button leftbtn" style="font-size: {{40}}rpx;">
+      开始专注
+    </button>
+    <view class="rightbtn">
+      <picker range="{{allPetList}}" value="{{selectPetIndex}}" bindchange="selectPet">
+        <image class="iconbtn" src="/images/icons/MaterialSymbolsPets.svg"></image>
+      </picker>
+    </view>
   </view>
 </view>

@@ -1,6 +1,6 @@
 <view class="container" style="background-image: url('{{backgroundImage||defaultbg}}');">
-<view wx:if="{{quote!==null}}" class="quote">
-{{quote}}
+ <view class="quote-container">
+  <view wx:if="{{quote!==null}}" class="quote">{{quote}}</view>
 </view>
   <view class="clock">
     <canvas class="ClockCanvas" type="2d" id="ClockCanvas"></canvas>
@@ -10,10 +10,10 @@
       <image wx:if="{{ keepScreenOn===true}}" src="./icon/ic_action_wb_sunny.png" mode="aspectFit" />
       <image wx:else src="./icon/ic_action_wb_not_sunny.png" mode="aspectFit" />
     </view>
-    <view class="icon-item" >
-          <picker range="{{musicName}}" value="{{musicIndex}}" bindchange="musicSwitchUI">
-                 <image  style="width:100%; aspect-ratio: 1 / 1;" src="./icon/ic_music.png" mode="aspectFit" />
-           </picker>
+    <view class="icon-item">
+      <picker range="{{musicName}}" value="{{musicIndex}}" bindchange="musicSwitchUI">
+        <image style="width:100%; aspect-ratio: 1 / 1;" src="./icon/ic_music.png" mode="aspectFit" />
+      </picker>
     </view>
     <view class="icon-item" bindtap="onPauseTap">
       <image wx:if="{{ paused===false }}" src="./icon/ic_action_pause.png" mode="aspectFit" />
@@ -27,4 +27,3 @@
     </view>
   </view>
 </view>
-

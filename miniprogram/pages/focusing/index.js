@@ -61,7 +61,9 @@ Page({
 
     keepScreenOn: false,
     paused: false,
-    quote:null
+    quote:null,
+
+    petName:null,
   },
   startTimer: function () {
     if (this.data.timer != null) {
@@ -102,7 +104,8 @@ Page({
         };
         if(Number(this.data.left_sec)%30==0 || this.data.quote===null){
           console.log("focus:left_min:",Number(this.data.left_sec))
-           this.setData({quote:quoteList[getRandomInt(0,quoteList.length-1)]})
+          let quote = quoteList[getRandomInt(0,quoteList.length-1)];
+           this.setData({quote:this.data.petName?this.data.petName+":"+quote:quote})
         }
       }, 1000);
   },
@@ -321,10 +324,13 @@ Page({
   /***********************************************************************/
   onLoad: function (options) {
     this.setData({backgroundImage:"./image/" + bgList[Date.now()%bgList.length]})
-    this.data.left_min = options["min"]
-    this.data.init_min = Number(options["min"])
-    this.data.left_sec = options["sec"]
-    this.data.init_sec = Number(options["sec"])
+    this.setData({
+        left_min:options["min"],
+        init_min:Number(options["min"]),
+        left_sec:options["sec"],
+        init_sec:Number(options["sec"]),
+        petName:options["petName"]||null
+    })
     this.initMusic();
     this.startMusic();
     this.startTimer();

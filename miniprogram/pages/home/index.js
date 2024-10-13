@@ -4,8 +4,11 @@ Page({
   /****************************************************/
   getTab(e) {
     const select = e.detail;
-    this.setData({ select:select.index });
-    console.log("home:select:",select)
+    this.setData({ select: select.index });
+    console.log("home:select:", select)
+  },
+  selectPet: function (e) {
+    this.data.selectPetIndex= Number(e.detail.value)
   },
   startFocus() {
     let openid = app.globalData["openId"];
@@ -22,21 +25,21 @@ Page({
         }
       });
     } else {
+      let url = '../focusing/index' +
+          "?min=" + this.data.tabList_min[this.data.select] +
+          "&sec=" + this.data.tabList_sec[this.data.select] +
+          (
+            this.data.selectPetIndex ?
+              "&petName=" + this.data.allPetList[this.data.selectPetIndex] : ''
+          );
+          console.log("home:ralunch.url:",url);
       wx.reLaunch({
-        url: '../focusing/index' + "?min=" + this.data.tabList_min[this.data.select] + "&sec=" + this.data.tabList_sec[this.data.select],
-        fail:function(){
-        console.log("focus:","跳转至主页失败")
+        url:url, 
+        fail: function () {
+          console.log("focus:", "跳转至主页失败")
         }
       })
     }
-  },
-  CloudFunctionTest() {
-  },
-
-  getUserInfoByOpenId: function (openid) {//TODO
-    const dbname = 'users';
-    const db = wx.cloud.database();
-    const _ = db.command
   },
   /****************************************************/
   /**
@@ -46,6 +49,8 @@ Page({
     tabList: ['5', '25', '40', '60', '120'],
     tabList_min: ['0', '25', '40', '60', '120'],
     tabList_sec: ['5', '0', '0', '0', '0'],
+    allPetList: ["无宠物", "萝卜猫", "萝卜狗"],
+    selectPetIndex: 0,
     select: 0,
   },
   /**
