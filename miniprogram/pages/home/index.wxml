@@ -1,6 +1,6 @@
 <!-- pages/home/index.wxml -->
 <view class="container">
-  <image class="img" mode="scaleToFill" src="../../images/bg_focus_settings.webp"></image>
+  <image class="img" mode="scaleToFill" src="../../images/bg_focus_settings.png"></image>
   <view class="quote-1-out">
     <text class="quote-1-inner">暂别手机,遇见更好的自己</text>
   </view>
