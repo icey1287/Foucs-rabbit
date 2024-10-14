@@ -9,7 +9,7 @@ Page({
     avatarUrl: '', 
     nickName: '',  
     sumFocusTime: 0,  
-    gold: 0, 
+    gold: 1000, 
     creationDate: '', 
     cellList: [
         {
@@ -129,7 +129,7 @@ updateNickNameInDB(nickName) {
       }
   },
 
-  // 从云数据库加载用户信息（专注时长、小组、创建账号日期）
+  // 从云数据库加载用户信息（专注时长、创建账号日期）
   loadUserData() {
     const openId = wx.getStorageSync('openId');
     const db = wx.cloud.database();
