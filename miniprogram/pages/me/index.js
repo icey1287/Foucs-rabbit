@@ -142,7 +142,7 @@ updateNickNameInDB(nickName) {
             this.setData({
                 sumFocusTime: userData.sumFocusTime || 0,
                 creationDate: userData.creationDate || '未知',
-                gold: userData.gold || 0,
+                gold: userData.gold || 1000,
                 avatarUrl: userData.avatarUrl || '/images/avatar_default.png', // 如果没有头像，显示默认头像
                 nickName: userData.nickName || '点我修改昵称' // 如果没有昵称，显示默认昵称
             });
@@ -155,7 +155,7 @@ updateNickNameInDB(nickName) {
                 data: {
                     openId: openId,
                     sumFocusTime: 0,
-                    gold: 0,
+                    gold: 1000,
                     creationDate: creationDate,
                     avatarUrl: '/images/avatar_default.png', // 默认头像
                     nickName: '点我修改昵称' // 设置默认昵称
@@ -164,7 +164,7 @@ updateNickNameInDB(nickName) {
                 console.log('创建用户数据成功');
                 this.setData({
                     sumFocusTime: 0,
-                    gold: 0,
+                    gold: 1000,
                     creationDate: creationDate,
                     avatarUrl: '/images/avatar_default.png',
                     nickName: '点我修改昵称' // 设置默认昵称
