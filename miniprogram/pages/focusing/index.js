@@ -77,20 +77,22 @@ Page({
     this.data.timer = setInterval(() => {
       if (totalSeconds <= 0) {
         clearInterval(this.data.timer);
+        let addgold = this.data.init_min?this.data.init_min*100:this.data.init_sec*100;
         this.stopMusic();
         this.destroyMusic();
         wx.showModal({
           title: '提示',
-          content: '倒计时结束！获得金币*' + this.data.init_min,
+          content: '倒计时结束！获得金币*' + addgold,
+          // content: '倒计时结束！获得金币*500',
           showCancel: false,
           success: (res) => {
             if (!DoNotCallCloudFunc) {//TEST:测试用5sec <=> 5min
               if (this.data.init_min == 0) {
                 this.addFocusRecord(this.data.init_sec);
-                this.updateUserTotalTime(this.data.init_sec)
+                this.updateUserTotalTime(this.data.init_sec,addgold);
               } else {
                 this.addFocusRecord(this.data.init_min);
-                this.updateUserTotalTime(this.data.init_min)
+                this.updateUserTotalTime(this.data.init_min,addgold);
               }
             }
             this.goBack();
@@ -106,7 +108,7 @@ Page({
         this.drawClock(this.data.left_min, this.data.left_sec);
       };
       if (Number(this.data.left_sec) % 30 == 0 || this.data.quote === null) {
-        console.log("focus:left_min:", Number(this.data.left_sec))
+        // console.log("focus:left_min:", Number(this.data.left_sec))
         let quote = quoteList[getRandomInt(0, quoteList.length - 1)];
         this.setData({ quote: this.data.petName ? this.data.petName + ":" + quote : quote })
       }
@@ -235,7 +237,7 @@ Page({
   },
   //更新users表的sumFocusTime和gold
   //(更新总专注时长,金币)
-  updateUserTotalTime: function (addtime) {
+  updateUserTotalTime: function (addtime,addgold) {
     addtime = Number(addtime)
     const dbname = 'users';
     const db = wx.cloud.database();
@@ -250,7 +252,7 @@ Page({
         .update({
           data: {
             sumFocusTime: _.inc(addtime),
-            gold: _.inc(addtime),
+            gold: _.inc(addgold),
           }
         })
     })
@@ -280,7 +282,14 @@ Page({
   },
   musicSwitchUI: function (e) {
     this.data.musicIndex = Number(e.detail.value)
-    this.restartMusic();
+    this.stopMusic();
+    
+    // musicPlayer = wx.createInnerAudioContext()
+    musicPlayer.src=this.data.musicPath[this.data.musicIndex]
+    musicPlayer.seek(0)
+    if(!this.data.paused){
+      this.startMusic();
+    }
   },
   onPauseTap: function () {
     // musicPlayer = wx.createInnerAudioContext()
@@ -289,9 +298,10 @@ Page({
     } else {
       musicPlayer.pause()
     }
-    this.setData({
-      paused: musicPlayer.paused
-    })
+    this.data.paused=!this.data.paused;
+    let tmp = this.data.paused;
+    this.setData({paused:tmp})
+    console.log("focus:musicplayer.paused:",musicPlayer.paused);
     console.log("focus:", "this.data.paused:", this.data.paused)
     // this.data.timer会读取paused变量暂停
   },
@@ -346,6 +356,7 @@ Page({
         validbgPicPath.push(path)
       }
     })
+    // this.setData({petImage:"/images/icons/copy.png"});
     this.setData({ backgroundImage:validbgPicPath[getRandomInt(0,validbgPicPath.length-1)]})
     // this.setData({ backgroundImage: "./image/" + bgList[Date.now() % bgList.length] })
     this.setData({
@@ -353,7 +364,8 @@ Page({
       init_min: Number(options["min"]),
       left_sec: options["sec"],
       init_sec: Number(options["sec"]),
-      petName: options["petName"] || null
+      petName: options["petName"] || null,
+      petImage:options["petImage"]||null
     })
     this.initMusic();
     this.startMusic();

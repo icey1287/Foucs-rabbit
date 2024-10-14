@@ -18,7 +18,7 @@ Page({
     if (openid == undefined || openid == null) {
       wx.showModal({
         title: '提示',
-        content: 'Please login',
+        content: '请先登录',
         showCancel: false,
         success: (res) => {
           // app.globalData["openId"] = "todo!";
@@ -34,7 +34,13 @@ Page({
         (
           this.data.selectPetIndex ?
             "&petName=" + this.data.allPetList[this.data.selectPetIndex] : ''
-        );
+        )+
+        (
+          this.data.selectPetIndex ?
+            "&petImage=/images/radishDog.png":''
+            // "&petImage=" + this.data.allPetList[this.data.selectPetIndex] : ''//TODO宠物图片路径
+        )
+        ;
       console.log("home:ralunch.url:", url);
       wx.reLaunch({
         url: url,

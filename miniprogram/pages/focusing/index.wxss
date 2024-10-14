@@ -12,7 +12,7 @@
 }
 
 /*quote*/
-.quote-container {
+.quote-container {/*80%w10%h*/
   position: fixed;
   top: 10vh;
   left: 10vw;
@@ -47,9 +47,9 @@
 
 }
 .quote-img {
-  width:15vw;
-  height: 15vw;
-  margin: 1rem;
+  height: 6vh;
+  width:6vh;
+  /* margin: 1rem; */
 }
 
 .quote-text {
