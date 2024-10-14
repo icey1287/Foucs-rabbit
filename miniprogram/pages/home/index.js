@@ -50,6 +50,18 @@ Page({
       })
     }
   },
+  getPetInfoFromCloudDb(){
+    const dbname = 'pet';
+    const db = wx.cloud.database();
+    const _ = db.command
+    db.collection(dbname).get()
+   let result =  wx.cloud.database().collection('pet').field(({
+        "cat_state":true,
+        "dog_state":true,
+        "totalGold":true,
+    })).get()
+    console.log("pet:",result);
+  },
   downloadRes() {
     //Pic
     Object.keys(bgPicCloudPath).forEach(key => {
