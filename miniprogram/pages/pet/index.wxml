@@ -10,7 +10,7 @@
   <view class="pet-item" wx:for="{{pets}}" wx:key="index">
     <image class="pet-image" src="{{item.image}}" mode="aspectFill"></image>
     <view class="pet-info">
-      <text class="pet-name">{{item.name}}</text>
+      <text class="pet-name">{{item.Name}}</text>
       <view clss="pet-state" wx:if="{{item.state==0}}">
       <text>宠物未拥有，请点击购买</text>
       <button type="warn" bindtap="Buy" data-index="{{index}}">购买</button>
