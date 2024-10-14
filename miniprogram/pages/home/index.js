@@ -3,6 +3,18 @@ const app = getApp();
 const fs = wx.getFileSystemManager()
 const bgPicCloudPath = app.globalData.bgPicCloudPath;
 const bgMucCloudPath = app.globalData.bgMucCloudPath;
+const petImgPath={
+  "宠物猫":[
+"/images/larval_radishCat.png",
+"/images/radishCat.png",
+"/images/adult_radishCat.png"
+  ],
+  "宠物狗":[
+"/images/larval_radishDog.png",
+"/images/radishDog.png",
+"/images/adult_radishDog.png"
+  ]
+}
 Page({
   /****************************************************/
   getTab(e) {
@@ -28,6 +40,19 @@ Page({
         }
       });
     } else {
+      let petImagePath;
+      if(this.data.selectPetIndex){
+        let pet = this.data.allPetList[this.data.selectPetIndex]
+        let level = this.data.allPetLevel[pet]
+        if(level<5){
+          petImagePath=petImgPath[pet][0]
+        }else if(level<10){
+          petImagePath=petImgPath[pet][1]
+        }else{
+          petImagePath=petImgPath[pet][2]
+        }
+      }
+      console.log("petPath",petImagePath)
       let url = '../focusing/index' +
         "?min=" + this.data.tabList_min[this.data.select] +
         "&sec=" + this.data.tabList_sec[this.data.select] +
@@ -37,7 +62,7 @@ Page({
         )+
         (
           this.data.selectPetIndex ?
-            "&petImage=/images/radishDog.png":''
+            "&petImage="+petImagePath:''
             // "&petImage=" + this.data.allPetList[this.data.selectPetIndex] : ''//TODO宠物图片路径
         )
         ;
@@ -55,12 +80,34 @@ Page({
     const db = wx.cloud.database();
     const _ = db.command
     db.collection(dbname).get()
-   let result =  wx.cloud.database().collection('pet').field(({
+   let result =  wx.cloud.database().collection('pet').where({
+     _openid:getApp().globalData.openId
+   }).field(({
         "cat_state":true,
         "dog_state":true,
         "totalGold":true,
-    })).get()
-    console.log("pet:",result);
+    })).get({success:res=>{
+      let data = res.data;
+      if(data.length==0){
+        console.log("length=0")
+        return;
+      }else{
+        let allpetlist = ["无宠物"]
+        let data2 = data[0];
+        console.log("length!=0",data2)
+        if(data2["cat_state"]!=0){
+          this.data.allPetLevel["宠物猫"]=data2["cat_state"]
+        console.log("cat",data2["cat_state"])
+          allpetlist.push("宠物猫")
+        }
+        if(data2["dog_state"]!=0){
+          this.data.allPetLevel["宠物狗"]=data2["dog_state"]
+          allpetlist.push("宠物狗")
+        }
+        this.setData({allPetList:allpetlist})
+      }
+    }})
+    // console.log("pet:",result);
   },
   downloadRes() {
     //Pic
@@ -118,7 +165,11 @@ Page({
     tabList: ['5', '25', '40', '60', '120'],
     tabList_min: ['0', '25', '40', '60', '120'],
     tabList_sec: ['5', '0', '0', '0', '0'],
-    allPetList: ["无宠物", "萝卜猫", "萝卜狗"],
+    allPetList: ["无宠物"],
+    allPetLevel:{
+      "宠物猫":0,
+      "宠物狗":0
+    },
     selectPetIndex: 0,
     select: 0,
   },
@@ -127,6 +178,7 @@ Page({
    */
   onLoad(options) {
     this.downloadRes();
+    // this.getPetInfoFromCloudDb()
   },
 
   /**
@@ -139,6 +191,7 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow() {
+  this.getPetInfoFromCloudDb()
   },
 
   /**
