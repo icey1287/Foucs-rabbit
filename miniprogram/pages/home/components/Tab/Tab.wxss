@@ -41,3 +41,16 @@
   background-color: #316096;
   color:white;
 }
+scroll-view ::-webkit-scrollbar {
+
+  appearance: none;
+
+  color: transparent;
+
+  display: none;
+
+  width: 0;
+
+  height: 0;
+
+}

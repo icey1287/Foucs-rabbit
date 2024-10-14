@@ -13,7 +13,7 @@
       开始专注
     </button>
     <view class="rightbtn">
-      <picker range="{{allPetList}}" value="{{selectPetIndex}}" bindchange="selectPet">
+      <picker range="{{allPetList}}" value="{{selectPetIndex}}" header-text="选择陪同宠物" bindchange="selectPet">
         <image class="iconbtn" src="/images/icons/MaterialSymbolsPets.svg"></image>
       </picker>
     </view>

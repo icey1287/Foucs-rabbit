@@ -308,7 +308,7 @@ Page({
   onStopTap: function () {
     wx.showModal({
       title: '提示',
-      content: '确定要停止倒计时吗？提前停止将失去奖励哦!',
+      content: '确定要停止倒计时吗？\r\n提前停止将失去奖励哦!',
       success: (res) => {
         if (res.confirm) {
           this.stopMusic();
