@@ -283,8 +283,6 @@ Page({
   musicSwitchUI: function (e) {
     this.data.musicIndex = Number(e.detail.value)
     this.stopMusic();
-    
-    // musicPlayer = wx.createInnerAudioContext()
     musicPlayer.src=this.data.musicPath[this.data.musicIndex]
     musicPlayer.seek(0)
     if(!this.data.paused){
@@ -295,12 +293,14 @@ Page({
     // musicPlayer = wx.createInnerAudioContext()
     if (this.data.paused) {
       musicPlayer.play()
+      this.data.paused=false;
+      this.setData({paused:false})
     } else {
       musicPlayer.pause()
+      this.data.paused=true
+      this.setData({paused:true})
     }
-    this.data.paused=!this.data.paused;
-    let tmp = this.data.paused;
-    this.setData({paused:tmp})
+    // this.data.paused=!this.data.paused;
     console.log("focus:musicplayer.paused:",musicPlayer.paused);
     console.log("focus:", "this.data.paused:", this.data.paused)
     // this.data.timer会读取paused变量暂停
@@ -308,7 +308,7 @@ Page({
   onStopTap: function () {
     wx.showModal({
       title: '提示',
-      content: '确定要停止倒计时吗？',
+      content: '确定要停止倒计时吗？提前停止将失去奖励哦!',
       success: (res) => {
         if (res.confirm) {
           this.stopMusic();
