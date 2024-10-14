@@ -27,17 +27,17 @@
   <view class="pet-cultivate">
   <view class="pet-images" wx:if="{{currentPet.state<5}}">
     <image class="pet_image" src="{{currentPet.image0}}"></image>
-    <text class="pet-name">{{currentPet.name}}</text>
+    <text class="pet-name">{{currentPet.Name}}</text>
     <text clsaa="pet-age">成长阶段：幼崽</text>
   </view>
   <view class="pet-images" wx:elif="{{currentPet.state>=5&&currentPet.state<10}}">
     <image class="pet_image" src="{{currentPet.image}}"></image>
-    <text class="pet-name">{{currentPet.name}}</text>
+    <text class="pet-name">{{currentPet.Name}}</text>
     <text clsaa="pet-age">成长阶段：青年</text>
   </view>
   <view class="pet-images" wx:else>
     <image class="pet_image" src="{{currentPet.image1}}"></image>
-    <text class="pet-name">{{currentPet.name}}</text>
+    <text class="pet-name">{{currentPet.Name}}</text>
     <text clsaa="pet-age">成长阶段：成年</text>
   </view>
       <text class="pet_info">等级: {{currentPet.state}}</text> 
