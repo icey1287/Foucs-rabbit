@@ -24,6 +24,10 @@
   <view>更多宠物请期待后续更新...</view>
 </view>
 <view class="training-container" wx:else="{{isdetailed==true}}">
+  <view class="radishgold-container">
+    <image class="radish-gold" src="/images/radishGold.png"></image>
+    <text class="gold">{{totalGold}}</text> <!-- 显示金币数量 -->
+  </view>
   <view class="pet-cultivate">
   <view class="pet-images" wx:if="{{currentPet.state<5}}">
     <image class="pet_image" src="{{currentPet.image0}}"></image>
